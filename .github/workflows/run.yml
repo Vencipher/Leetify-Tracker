@@ -27,4 +27,5 @@ jobs:
           DIDDY_WEBHOOK: ${{ secrets.DIDDY_WEBHOOK }}
           NEBUNULAJOKURI_WEBHOOK: ${{ secrets.NEBUNULAJOKURI_WEBHOOK }}
           ULTRA_WEBHOOK: ${{ secrets.ULTRA_WEBHOOK }}
+          SCOREBOARD_WEBHOOK: ${{ secrets.SCOREBOARD_WEBHOOK }}
         run: python main.py
