@@ -1,0 +1,30 @@
+name: Tracker
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - run: pip install requests
+      
+      - env:
+          LEETIFY_API_KEY: ${{ secrets.LEETIFY_API_KEY }}
+          TUDOR_WEBHOOK: ${{ secrets.TUDOR_WEBHOOK }}
+          SIDDORU_WEBHOOK: ${{ secrets.SIDDORU_WEBHOOK }}
+          PUYA_WEBHOOK: ${{ secrets.PUYA_WEBHOOK }}
+          ROBI_WEBHOOK: ${{ secrets.ROBI_WEBHOOK }}
+          ANDRE1_WEBHOOK: ${{ secrets.ANDRE1_WEBHOOK }}
+          DIDDY_WEBHOOK: ${{ secrets.DIDDY_WEBHOOK }}
+          NEBUNULAJOKURI_WEBHOOK: ${{ secrets.NEBUNULAJOKURI_WEBHOOK }}
+          ULTRA_WEBHOOK: ${{ secrets.ULTRA_WEBHOOK }}
+        run: python main.py
