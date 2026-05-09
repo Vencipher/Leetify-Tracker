@@ -1,24 +1,32 @@
-name: Tracker
+name: Leetify Tracker
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: "3,18,33,48 * * * *"
   workflow_dispatch:
 
 jobs:
   track:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
-      - uses: actions/checkout@v3
-      
-      - uses: actions/setup-python@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-          
-      - run: pip install requests
-      
-      - env:
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run tracker
+        env:
           LEETIFY_API_KEY: ${{ secrets.LEETIFY_API_KEY }}
+          SCOREBOARD_WEBHOOK: ${{ secrets.SCOREBOARD_WEBHOOK }}
           TUDOR_WEBHOOK: ${{ secrets.TUDOR_WEBHOOK }}
           SIDDORU_WEBHOOK: ${{ secrets.SIDDORU_WEBHOOK }}
           PUYA_WEBHOOK: ${{ secrets.PUYA_WEBHOOK }}
@@ -27,5 +35,12 @@ jobs:
           DIDDY_WEBHOOK: ${{ secrets.DIDDY_WEBHOOK }}
           NEBUNULAJOKURI_WEBHOOK: ${{ secrets.NEBUNULAJOKURI_WEBHOOK }}
           ULTRA_WEBHOOK: ${{ secrets.ULTRA_WEBHOOK }}
-          SCOREBOARD_WEBHOOK: ${{ secrets.SCOREBOARD_WEBHOOK }}
         run: python main.py
+
+      - name: Commit and push seen matches
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          touch seen_matches.txt
+          git add seen_matches.txt
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update seen matches" && git push)
