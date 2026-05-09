@@ -122,11 +122,9 @@ def main():
         })
                     
     for match_id, match_data in grouped_matches.items():
-        # Change this to >= 2 if you only want scoreboards when playing together
         if len(match_data["players"]) >= 1: 
             send_scoreboard_webhook(match_id, match_data["map_name"], match_data["players"])
 
-    # Save new match IDs to the text file
     for match_id in new_match_ids:
         save_seen_match(match_id)
         print(f"Saved {match_id} to seen_matches.txt")
