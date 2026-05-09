@@ -54,6 +54,10 @@ def fetch_latest_match(steam_id):
                 return recent[0], data
             else:
                 print(f"  → Profile OK but no recent matches. Response keys: {list(data.keys())}")
+                if "error" in data:
+                    print(f"  → Error from API: {data['error']}")
+                else:
+                    print(f"  → Full response: {str(data)[:500]}")
                 return None, None
 
         elif response.status_code == 401:
