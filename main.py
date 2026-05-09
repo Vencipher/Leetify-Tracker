@@ -73,7 +73,7 @@ def send_scoreboard_webhook(match_id, map_name, players):
     requests.post(SCOREBOARD_WEBHOOK, json={"embeds": [embed]})
 
 def main():
-    time_limit = datetime.now(timezone.utc) - timedelta(minutes=20)
+    time_limit = datetime.now(timezone.utc) - timedelta(days=2)
     
     grouped_matches = {}
     
