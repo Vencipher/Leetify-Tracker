@@ -40,12 +40,12 @@ def fetch_latest_match(steam_id):
     Every tracked player MUST have a Leetify account at leetify.com.
     API docs: https://api-public-docs.cs-prod.leetify.com/
     """
-    url = f"{BASE_URL}/v3/profile"
-    params = {"steam64Id": steam_id}
+    url = f"{BASE_URL}/v3/profile/{steam_id}"
+    params = {}
 
     try:
         response = requests.get(url, headers=get_headers(), params=params, timeout=15)
-        print(f"  → GET /v3/profile?steam64Id={steam_id} → HTTP {response.status_code}")
+        print(f"  → GET /v3/profile/{steam_id} → HTTP {response.status_code}")
 
         if response.status_code == 200:
             data = response.json()
