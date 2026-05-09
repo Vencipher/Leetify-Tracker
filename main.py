@@ -33,65 +33,43 @@ def get_headers():
 
 def fetch_latest_match(steam_id):
     """
-    Fetch the most recent match for a player via the v3 profile endpoint.
-    The profile response contains a 'recentMatches' list.
-
-    NOTE: Since January 2026, Leetify only returns data for registered users.
-    Every tracked player MUST have a Leetify account at leetify.com.
-    API docs: https://api-public-docs.cs-prod.leetify.com/
+    GET /v3/profile?steam64_id={steam_id}
+    Returns profile with recent_matches array.
+    Each match has: id, map_name, leetify_rating, outcome, score, finished_at
+    NOTE: All tracked players must have a Leetify account at leetify.com
     """
-    url = f"{BASE_URL}/v3/profile/{steam_id}"
-    params = {}
+    url = f"{BASE_URL}/v3/profile"
+    params = {"steam64_id": steam_id}
 
     try:
         response = requests.get(url, headers=get_headers(), params=params, timeout=15)
-        print(f"  → GET /v3/profile/{steam_id} → HTTP {response.status_code}")
+        print(f"  → HTTP {response.status_code}")
 
         if response.status_code == 200:
             data = response.json()
-            recent = data.get("recentMatches") or data.get("recent_matches") or []
+            if "error" in data:
+                print(f"  → API error: {data['error']}")
+                return None
+            recent = data.get("recent_matches", [])
             if recent:
-                return recent[0], data
+                return recent[0]
             else:
-                print(f"  → Profile OK but no recent matches. Response keys: {list(data.keys())}")
-                if "error" in data:
-                    print(f"  → Error from API: {data['error']}")
-                else:
-                    print(f"  → Full response: {str(data)[:500]}")
-                return None, None
-
-        elif response.status_code == 401:
-            print(f"  → 401 Unauthorized: LEETIFY_API_KEY is missing or invalid.")
-        elif response.status_code == 403:
-            print(f"  → 403 Forbidden: API key denied for this player.")
+                print(f"  → No recent matches in profile.")
+                return None
         elif response.status_code == 404:
-            print(f"  → 404 Not Found: This player must sign up at leetify.com to be tracked.")
+            print(f"  → Player not found. They must sign up at leetify.com first.")
+        elif response.status_code == 401:
+            print(f"  → Invalid API key.")
         else:
-            print(f"  → Unexpected response body: {response.text[:300]}")
+            print(f"  → Unexpected: {response.text[:200]}")
 
-    except requests.exceptions.ConnectionError as e:
-        print(f"  → Connection error (URL may be wrong or network unreachable): {e}")
-    except requests.exceptions.Timeout:
-        print(f"  → Request timed out.")
     except Exception as e:
-        print(f"  → Unexpected error ({type(e).__name__}): {e}")
+        print(f"  → Error ({type(e).__name__}): {e}")
 
-    return None, None
-
-def find_player_stats(match, steam_id):
-    """
-    v3 match entries may contain stats for all players.
-    Find this player's stats by Steam ID.
-    """
-    stats_list = match.get("stats") or []
-    for stat in stats_list:
-        sid = stat.get("steamId") or stat.get("steam_id") or ""
-        if str(sid) == str(steam_id):
-            return stat
-    return match  # fallback: treat the match object as already player-scoped
+    return None
 
 def format_rating(rating):
-    """Leetify rating is a float like 0.234. Display as e.g. +23.4"""
+    """leetify_rating is a float like -0.0014. Display as e.g. -0.14"""
     try:
         val = float(rating)
         display = round(val * 100, 1)
@@ -99,23 +77,26 @@ def format_rating(rating):
     except (TypeError, ValueError):
         return "N/A"
 
-def send_individual_webhook(webhook_url, player_name, match, steam_id):
+def outcome_emoji(outcome):
+    return {"win": "✅", "loss": "❌", "tie": "➖"}.get(outcome, "❓")
+
+def send_individual_webhook(webhook_url, player_name, match):
     if not webhook_url:
         return
 
-    map_name = match.get("mapName") or match.get("map_name", "Unknown")
-    stats = find_player_stats(match, steam_id)
-
-    rating = stats.get("leetifyRating") or stats.get("leetify_rating")
-    kills = stats.get("kills") or stats.get("totalKills") or stats.get("total_kills", 0)
-    deaths = stats.get("deaths", 0)
+    map_name = match.get("map_name", "Unknown")
+    rating = match.get("leetify_rating")
+    outcome = match.get("outcome", "unknown")
+    score = match.get("score", [])
+    score_str = f"{score[0]}-{score[1]}" if len(score) == 2 else "N/A"
 
     embed = {
-        "title": f"New Match on {map_name}",
-        "color": 15277667,
+        "title": f"{outcome_emoji(outcome)} New Match on {map_name}",
+        "color": 5763719 if outcome == "win" else (15548997 if outcome == "loss" else 16776960),
         "fields": [
             {"name": "Leetify Rating", "value": f"**{format_rating(rating)}**", "inline": True},
-            {"name": "K/D", "value": f"{kills} / {deaths}", "inline": True}
+            {"name": "Score", "value": score_str, "inline": True},
+            {"name": "Result", "value": outcome.capitalize(), "inline": True},
         ],
         "thumbnail": {"url": "https://leetify.com/assets/images/logo/logo-leetify.png"},
         "footer": {"text": "Data provided by Leetify"}
@@ -123,13 +104,13 @@ def send_individual_webhook(webhook_url, player_name, match, steam_id):
 
     result = requests.post(webhook_url, json={"embeds": [embed]}, timeout=10)
     if result.status_code not in (200, 204):
-        print(f"  → Webhook post failed for {player_name}: HTTP {result.status_code}")
+        print(f"  → Webhook failed for {player_name}: HTTP {result.status_code}")
 
 def send_scoreboard_webhook(match_id, map_name, players):
     if not SCOREBOARD_WEBHOOK:
         return
     if len(players) < 2:
-        print(f"  → Skipping scoreboard for {match_id} (only {len(players)} tracked player)")
+        print(f"  → Skipping scoreboard (only {len(players)} tracked player in this match)")
         return
 
     players.sort(key=lambda x: float(x.get("rating") or -99), reverse=True)
@@ -137,7 +118,7 @@ def send_scoreboard_webhook(match_id, map_name, players):
     description_lines = []
     for i, p in enumerate(players, 1):
         description_lines.append(
-            f"**{i}. {p['name']}**: {format_rating(p['rating'])} Rating ({p['kills']}K / {p['deaths']}D)"
+            f"**{i}. {p['name']}**: {format_rating(p['rating'])} Rating"
         )
 
     embed = {
@@ -157,44 +138,33 @@ def main():
     new_match_ids = set()
 
     for steam_id, info in PLAYER_INFO.items():
-        print(f"\nChecking matches for {info['name']} ({steam_id})...")
-        latest_match, profile = fetch_latest_match(steam_id)
+        print(f"\nChecking {info['name']} ({steam_id})...")
+        latest_match = fetch_latest_match(steam_id)
 
         if not latest_match:
-            print(f"  → Skipping {info['name']}")
+            print(f"  → Skipping.")
             continue
 
-        match_id = (
-            latest_match.get("matchId")
-            or latest_match.get("id")
-            or latest_match.get("gameId")
-        )
+        match_id = latest_match.get("id")
         if not match_id:
-            print(f"  → No match ID found. Match keys: {list(latest_match.keys())}")
+            print(f"  → No match ID found. Keys: {list(latest_match.keys())}")
             continue
 
         if match_id in seen_matches:
-            print(f"  → Already seen latest match ({match_id}), nothing new.")
+            print(f"  → Already seen ({match_id[:8]}...), nothing new.")
             continue
 
-        print(f"  → NEW match: {match_id}")
+        print(f"  → NEW match: {match_id[:8]}... on {latest_match.get('map_name')}")
         new_match_ids.add(match_id)
-        send_individual_webhook(info["webhook"], info["name"], latest_match, steam_id)
+        send_individual_webhook(info["webhook"], info["name"], latest_match)
 
-        map_name = latest_match.get("mapName") or latest_match.get("map_name", "Unknown")
-        stats = find_player_stats(latest_match, steam_id)
-        rating = stats.get("leetifyRating") or stats.get("leetify_rating")
-        kills = stats.get("kills") or stats.get("totalKills") or stats.get("total_kills", 0)
-        deaths = stats.get("deaths", 0)
-
+        map_name = latest_match.get("map_name", "Unknown")
         if match_id not in grouped_matches:
             grouped_matches[match_id] = {"map_name": map_name, "players": []}
 
         grouped_matches[match_id]["players"].append({
             "name": info["name"],
-            "rating": rating,
-            "kills": kills,
-            "deaths": deaths
+            "rating": latest_match.get("leetify_rating"),
         })
 
     print()
@@ -203,7 +173,7 @@ def main():
 
     for match_id in new_match_ids:
         save_seen_match(match_id)
-        print(f"Saved {match_id} to seen_matches.txt")
+        print(f"Saved {match_id[:8]}... to seen_matches.txt")
 
     if not new_match_ids:
         print("No new matches found this run.")
