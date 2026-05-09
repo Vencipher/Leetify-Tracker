@@ -41,11 +41,11 @@ def fetch_latest_match(steam_id):
     API docs: https://api-public-docs.cs-prod.leetify.com/
     """
     url = f"{BASE_URL}/v3/profile"
-    params = {"steamId": steam_id}
+    params = {"steam64Id": steam_id}
 
     try:
         response = requests.get(url, headers=get_headers(), params=params, timeout=15)
-        print(f"  → GET /v3/profile?steamId={steam_id} → HTTP {response.status_code}")
+        print(f"  → GET /v3/profile?steam64Id={steam_id} → HTTP {response.status_code}")
 
         if response.status_code == 200:
             data = response.json()
