@@ -1,9 +1,9 @@
 import os
 import requests
-from datetime import datetime, timezone, timedelta
 
 LEETIFY_API_KEY = os.environ.get("LEETIFY_API_KEY")
 SCOREBOARD_WEBHOOK = os.environ.get("SCOREBOARD_WEBHOOK")
+SEEN_MATCHES_FILE = "seen_matches.txt"
 
 PLAYER_INFO = {
     "76561198190033377": {"name": "Tudor", "webhook": os.environ.get("TUDOR_WEBHOOK")},
@@ -16,6 +16,16 @@ PLAYER_INFO = {
     "76561198838107739": {"name": "ULTRADARKSHADOWPROMEGAKILLER777", "webhook": os.environ.get("ULTRA_WEBHOOK")}
 }
 
+def load_seen_matches():
+    if not os.path.exists(SEEN_MATCHES_FILE):
+        return set()
+    with open(SEEN_MATCHES_FILE, "r") as f:
+        return set(line.strip() for line in f.readlines())
+
+def save_seen_match(match_id):
+    with open(SEEN_MATCHES_FILE, "a") as f:
+        f.write(f"{match_id}\n")
+
 def fetch_latest_match(steam_id):
     url = f"https://api-public.cs-prod.leetify.com/api/v1/players/{steam_id}/matches"
     headers = {"_leetify_key": LEETIFY_API_KEY}
@@ -26,8 +36,10 @@ def fetch_latest_match(steam_id):
             matches = response.json()
             if matches and len(matches) > 0:
                 return matches[0]
-    except Exception:
-        pass
+        else:
+            print(f"Failed to fetch matches. Status code: {response.status_code}")
+    except Exception as e:
+        print(f"API Error fetching {steam_id}: {e}")
     return None
 
 def send_individual_webhook(webhook_url, match):
@@ -73,43 +85,51 @@ def send_scoreboard_webhook(match_id, map_name, players):
     requests.post(SCOREBOARD_WEBHOOK, json={"embeds": [embed]})
 
 def main():
-    time_limit = datetime.now(timezone.utc) - timedelta(days=2)
-    
+    seen_matches = load_seen_matches()
     grouped_matches = {}
+    new_match_ids = set()
     
     for steam_id, info in PLAYER_INFO.items():
+        print(f"Checking matches for {info['name']}...")
         latest_match = fetch_latest_match(steam_id)
         if not latest_match:
+            print(f"No match data returned for {info['name']}")
             continue
             
-        finished_at_str = latest_match.get("gameFinishedAt")
-        if finished_at_str:
-            if finished_at_str.endswith('Z'):
-                finished_at_str = finished_at_str[:-1] + '+00:00'
+        match_id = latest_match.get("matchId")
+        if not match_id:
+            continue
             
-            finished_at = datetime.fromisoformat(finished_at_str)
+        if match_id in seen_matches:
+            print(f"Already seen latest match for {info['name']} ({match_id})")
+            continue
             
-            if finished_at > time_limit:
-                send_individual_webhook(info["webhook"], latest_match)
-                
-                match_id = latest_match.get("matchId")
-                if match_id:
-                    if match_id not in grouped_matches:
-                        grouped_matches[match_id] = {
-                            "map_name": latest_match.get("mapName", "Unknown"),
-                            "players": []
-                        }
-                    
-                    grouped_matches[match_id]["players"].append({
-                        "name": info["name"],
-                        "rating": latest_match.get("leetifyRating", 0),
-                        "kills": latest_match.get("kills", 0),
-                        "deaths": latest_match.get("deaths", 0)
-                    })
+        print(f"Found NEW match for {info['name']} ({match_id})")
+        new_match_ids.add(match_id)
+        send_individual_webhook(info["webhook"], latest_match)
+        
+        if match_id not in grouped_matches:
+            grouped_matches[match_id] = {
+                "map_name": latest_match.get("mapName", "Unknown"),
+                "players": []
+            }
+        
+        grouped_matches[match_id]["players"].append({
+            "name": info["name"],
+            "rating": latest_match.get("leetifyRating", 0),
+            "kills": latest_match.get("kills", 0),
+            "deaths": latest_match.get("deaths", 0)
+        })
                     
     for match_id, match_data in grouped_matches.items():
+        # Change this to >= 2 if you only want scoreboards when playing together
         if len(match_data["players"]) >= 1: 
             send_scoreboard_webhook(match_id, match_data["map_name"], match_data["players"])
+
+    # Save new match IDs to the text file
+    for match_id in new_match_ids:
+        save_seen_match(match_id)
+        print(f"Saved {match_id} to seen_matches.txt")
 
 if __name__ == "__main__":
     main()
