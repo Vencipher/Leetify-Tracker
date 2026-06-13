@@ -146,24 +146,24 @@ def send_individual_webhook(webhook_url, player_name, steam_id, match, match_det
         ) or "—"
 
         fields = [
-            {"name": "Kills",             "value": str(kills),                                          "inline": True},
-            {"name": "Deaths",            "value": str(deaths),                                         "inline": True},
-            {"name": "Assists",           "value": str(assists),                                         "inline": True},
-            {"name": "K/D",              "value": f"{kd:.2f}" if kd is not None else "N/A",             "inline": True},
-            {"name": "HS%",              "value": hs_pct,                                               "inline": True},
-            {"name": "ADR",              "value": f"{adr:.1f}" if adr is not None else "N/A",           "inline": True},
-            {"name": "Rating",           "value": f"**{fmt_rating(rating)}**",                          "inline": True},
-            {"name": "CT Rating",        "value": fmt_rating(ct_rating),                                "inline": True},
-            {"name": "T Rating",         "value": fmt_rating(t_rating),                                 "inline": True},
-            {"name": "Accuracy",         "value": fmt_pct(accuracy),                                    "inline": True},
-            {"name": "Reaction Time",    "value": f"{reaction * 1000:.0f}ms" if reaction else "N/A",   "inline": True},
-            {"name": "MVPs",             "value": str(mvps),                                            "inline": True},
+            {"name": "Kills",             "value": str(kills),                                         "inline": True},
+            {"name": "Deaths",            "value": str(deaths),                                        "inline": True},
+            {"name": "Assists",           "value": str(assists),                                       "inline": True},
+            {"name": "K/D",              "value": f"{kd:.2f}" if kd is not None else "N/A",           "inline": True},
+            {"name": "HS%",              "value": hs_pct,                                              "inline": True},
+            {"name": "ADR",              "value": f"{adr:.1f}" if adr is not None else "N/A",         "inline": True},
+            {"name": "Rating",           "value": f"**{fmt_rating(rating)}**",                        "inline": True},
+            {"name": "CT Rating",        "value": fmt_rating(ct_rating),                              "inline": True},
+            {"name": "T Rating",         "value": fmt_rating(t_rating),                               "inline": True},
+            {"name": "Accuracy",         "value": fmt_pct(accuracy),                                  "inline": True},
+            {"name": "Reaction Time",    "value": f"{reaction * 1000:.0f}ms" if reaction else "N/A", "inline": True},
+            {"name": "MVPs",             "value": str(mvps),                                          "inline": True},
             {"name": "Util on Death",    "value": f"${util_death:.0f}" if util_death is not None else "N/A", "inline": True},
-            {"name": "Flash Assists",    "value": f"{fl_assists} ({fl_thrown} thrown)",                 "inline": True},
-            {"name": "Smokes / Molotovs","value": f"{smokes} / {molotovs}",                            "inline": True},
-            {"name": "Trade Kill%",      "value": fmt_pct(trade_kill),                                  "inline": True},
-            {"name": "Traded Death%",    "value": fmt_pct(traded_dead),                                 "inline": True},
-            {"name": "Multi-kills",      "value": multi_str,                                            "inline": True},
+            {"name": "Flash Assists",    "value": f"{fl_assists} ({fl_thrown} thrown)",               "inline": True},
+            {"name": "Smokes / Molotovs","value": f"{smokes} / {molotovs}",                          "inline": True},
+            {"name": "Trade Kill%",      "value": fmt_pct(trade_kill),                                "inline": True},
+            {"name": "Traded Death%",    "value": fmt_pct(traded_dead),                               "inline": True},
+            {"name": "Multi-kills",      "value": multi_str,                                          "inline": True},
         ]
     else:
         fields = [
@@ -211,55 +211,78 @@ def send_scoreboard_webhook(match_id, map_name, players):
         print(f"  → Scoreboard webhook failed: HTTP {result.status_code}")
 
 
+def process_player_matches(steam_id, info, seen_matches, sent_webhooks, match_details_cache, grouped_matches, new_match_ids):
+    recent = fetch_recent_matches(steam_id, count=5)
+
+    if not recent:
+        print("  → Skipping.")
+        return False
+
+    found_new = False
+
+    for match in recent:
+        match_id = match.get("id")
+        if not match_id:
+            print(f"  → No match ID found. Keys: {list(match.keys())}")
+            continue
+
+        if match_id in seen_matches:
+            print(f"  → Already seen ({match_id[:8]}...), skipping.")
+            continue
+
+        webhook_key = (steam_id, match_id)
+        if webhook_key in sent_webhooks:
+            continue
+
+        print(f"  → NEW match: {match_id[:8]}... on {match.get('map_name')}")
+        sent_webhooks.add(webhook_key)
+        new_match_ids.add(match_id)
+        found_new = True
+
+        if match_id not in match_details_cache:
+            print(f"  → Fetching match details for {match_id[:8]}...")
+            match_details_cache[match_id] = fetch_match_details(match_id)
+
+        send_individual_webhook(
+            info["webhook"], info["name"], steam_id,
+            match, match_details_cache.get(match_id)
+        )
+
+        map_name = match.get("map_name", "Unknown")
+        if match_id not in grouped_matches:
+            grouped_matches[match_id] = {"map_name": map_name, "players": []}
+        grouped_matches[match_id]["players"].append({
+            "name":   info["name"],
+            "rating": match.get("leetify_rating"),
+        })
+
+    return found_new
+
+
 def main():
     seen_matches        = load_seen_matches()
     grouped_matches     = {}
     new_match_ids       = set()
     sent_webhooks       = set()
     match_details_cache = {}
+    missed_players      = {}
 
     for steam_id, info in PLAYER_INFO.items():
         print(f"\nChecking {info['name']} ({steam_id})...")
-        recent = fetch_recent_matches(steam_id, count=5)
+        found_new = process_player_matches(
+            steam_id, info, seen_matches, sent_webhooks,
+            match_details_cache, grouped_matches, new_match_ids
+        )
+        if not found_new:
+            missed_players[steam_id] = info
 
-        if not recent:
-            print("  → Skipping.")
-            continue
-
-        for match in recent:
-            match_id = match.get("id")
-            if not match_id:
-                print(f"  → No match ID found. Keys: {list(match.keys())}")
-                continue
-
-            if match_id in seen_matches:
-                print(f"  → Already seen ({match_id[:8]}...), skipping.")
-                continue
-
-            webhook_key = (steam_id, match_id)
-            if webhook_key in sent_webhooks:
-                continue
-
-            print(f"  → NEW match: {match_id[:8]}... on {match.get('map_name')}")
-            sent_webhooks.add(webhook_key)
-            new_match_ids.add(match_id)
-
-            if match_id not in match_details_cache:
-                print(f"  → Fetching match details for {match_id[:8]}...")
-                match_details_cache[match_id] = fetch_match_details(match_id)
-
-            send_individual_webhook(
-                info["webhook"], info["name"], steam_id,
-                match, match_details_cache.get(match_id)
-            )
-
-            map_name = match.get("map_name", "Unknown")
-            if match_id not in grouped_matches:
-                grouped_matches[match_id] = {"map_name": map_name, "players": []}
-            grouped_matches[match_id]["players"].append({
-                "name":   info["name"],
-                "rating": match.get("leetify_rating"),
-            })
+    print("\nRunning second pass for players with no new matches...")
+    for steam_id, info in missed_players.items():
+        print(f"\nRe-checking {info['name']} ({steam_id})...")
+        process_player_matches(
+            steam_id, info, seen_matches, sent_webhooks,
+            match_details_cache, grouped_matches, new_match_ids
+        )
 
     print()
     for match_id, match_data in grouped_matches.items():
