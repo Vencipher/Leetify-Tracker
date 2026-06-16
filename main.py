@@ -18,6 +18,56 @@ PLAYER_INFO = {
     "76561198838107739": {"name": "ULTRADARKSHADOWPROMEGAKILLER777","webhook": os.environ.get("ULTRA_WEBHOOK")},
 }
 
+TIER_IMAGES = {
+    "Luca Peter level":  "https://i.postimg.cc/QCx3P5bY/poop-emoji-poo-emoji.jpg",
+    "Trash":             "https://i.postimg.cc/pX4wQ3gk/Toter-64Gallon-Two-Wheel-Can-Green-25564-Main.png",
+    "Could be better":   "https://i.postimg.cc/gJ17yZ7w/it-could-be-better-james-pumphrey.gif",
+    "On par":            "https://i.postimg.cc/DZpjvXhM/7a52a122-2ebc-4ef2-9199-2d59707e477b.png",
+    "Nice":              "https://i.postimg.cc/kg7py9T5/nice-smack.gif",
+    "Great":             "https://i.postimg.cc/6QyzHQnQ/good-job.gif",
+    "Excellent":         "https://i.postimg.cc/rsFDJDRN/magnificent-golden-crown-with-precious-gems-191095-82978.png",
+    "Gaben taking notes":"https://i.postimg.cc/CKTd2PfK/gabe-newell-portrait-v0-n-FT0PHHDTTBGzv6md-HXr-Go-Kc-Cn-Kaujg-Zzr0z2MG-k7M.png",
+}
+
+TIER_COLORS = {
+    "Luca Peter level":  "1;31",
+    "Trash":             "31",
+    "Could be better":   "33",
+    "On par":            "1;33",
+    "Nice":              "1;32",
+    "Great":             "32",
+    "Excellent":         "4;32",
+    "Gaben taking notes":"43;1;30",
+}
+
+
+def get_tier(rating):
+    try:
+        val = float(rating) * 100
+    except (TypeError, ValueError):
+        return "On par", TIER_IMAGES["On par"], TIER_COLORS["On par"]
+    if val <= -5:
+        label = "Luca Peter level"
+    elif val <= -2.5:
+        label = "Trash"
+    elif val <= -1:
+        label = "Could be better"
+    elif val <= 1:
+        label = "On par"
+    elif val <= 2.5:
+        label = "Nice"
+    elif val <= 5:
+        label = "Great"
+    elif val <= 10:
+        label = "Excellent"
+    else:
+        label = "Gaben taking notes"
+    return label, TIER_IMAGES[label], TIER_COLORS[label]
+
+
+def colored_tier(label, color_code):
+    return f"```ansi\n\u001b[{color_code}m{label}\u001b[0m\n```"
+
 
 def load_seen_matches():
     if not os.path.exists(SEEN_MATCHES_FILE):
@@ -112,7 +162,11 @@ def send_individual_webhook(webhook_url, player_name, steam_id, match, match_det
     score_str = f"{score[0]}-{score[1]}" if len(score) == 2 else "N/A"
     color     = 5763719 if outcome == "win" else (15548997 if outcome == "loss" else 16776960)
 
+    tier_label, tier_image, tier_color = get_tier(rating)
+    tier_value = colored_tier(tier_label, tier_color)
     ps = get_player_stats_from_match(match_details, steam_id)
+
+    separator = {"name": "\u200b", "value": "\u200b", "inline": False}
 
     if ps:
         kills       = ps.get("total_kills", 0)
@@ -146,38 +200,42 @@ def send_individual_webhook(webhook_url, player_name, steam_id, match, match_det
         ) or "—"
 
         fields = [
-            {"name": "Kills",             "value": str(kills),                                         "inline": True},
-            {"name": "Deaths",            "value": str(deaths),                                        "inline": True},
-            {"name": "Assists",           "value": str(assists),                                       "inline": True},
-            {"name": "K/D",              "value": f"{kd:.2f}" if kd is not None else "N/A",           "inline": True},
-            {"name": "HS%",              "value": hs_pct,                                              "inline": True},
-            {"name": "ADR",              "value": f"{adr:.1f}" if adr is not None else "N/A",         "inline": True},
-            {"name": "Rating",           "value": f"**{fmt_rating(rating)}**",                        "inline": True},
-            {"name": "CT Rating",        "value": fmt_rating(ct_rating),                              "inline": True},
-            {"name": "T Rating",         "value": fmt_rating(t_rating),                               "inline": True},
-            {"name": "Accuracy",         "value": fmt_pct(accuracy),                                  "inline": True},
-            {"name": "Reaction Time",    "value": f"{reaction * 1000:.0f}ms" if reaction else "N/A", "inline": True},
-            {"name": "MVPs",             "value": str(mvps),                                          "inline": True},
-            {"name": "Util on Death",    "value": f"${util_death:.0f}" if util_death is not None else "N/A", "inline": True},
-            {"name": "Flash Assists",    "value": f"{fl_assists} ({fl_thrown} thrown)",               "inline": True},
-            {"name": "Smokes / Molotovs","value": f"{smokes} / {molotovs}",                          "inline": True},
-            {"name": "Trade Kill%",      "value": fmt_pct(trade_kill),                                "inline": True},
-            {"name": "Traded Death%",    "value": fmt_pct(traded_dead),                               "inline": True},
-            {"name": "Multi-kills",      "value": multi_str,                                          "inline": True},
+            {"name": "Kills",              "value": str(kills),                                         "inline": True},
+            {"name": "Deaths",             "value": str(deaths),                                        "inline": True},
+            {"name": "Assists",            "value": str(assists),                                       "inline": True},
+            {"name": "K/D",               "value": f"{kd:.2f}" if kd is not None else "N/A",           "inline": True},
+            {"name": "HS%",               "value": hs_pct,                                              "inline": True},
+            {"name": "ADR",               "value": f"{adr:.1f}" if adr is not None else "N/A",         "inline": True},
+            {"name": "Rating",            "value": f"**{fmt_rating(rating)}**",                        "inline": True},
+            {"name": "CT Rating",         "value": fmt_rating(ct_rating),                              "inline": True},
+            {"name": "T Rating",          "value": fmt_rating(t_rating),                               "inline": True},
+            {"name": "Accuracy",          "value": fmt_pct(accuracy),                                  "inline": True},
+            {"name": "Reaction Time",     "value": f"{reaction * 1000:.0f}ms" if reaction else "N/A", "inline": True},
+            {"name": "MVPs",              "value": str(mvps),                                          "inline": True},
+            {"name": "Util on Death",     "value": f"${util_death:.0f}" if util_death is not None else "N/A", "inline": True},
+            {"name": "Flash Assists",     "value": f"{fl_assists} ({fl_thrown} thrown)",               "inline": True},
+            {"name": "Smokes / Molotovs", "value": f"{smokes} / {molotovs}",                          "inline": True},
+            {"name": "Trade Kill%",       "value": fmt_pct(trade_kill),                                "inline": True},
+            {"name": "Traded Death%",     "value": fmt_pct(traded_dead),                               "inline": True},
+            {"name": "Multi-kills",       "value": multi_str,                                          "inline": True},
+            separator,
+            {"name": "Skill Level",       "value": tier_value,                                         "inline": False},
         ]
     else:
         fields = [
             {"name": "Leetify Rating", "value": f"**{fmt_rating(rating)}**", "inline": True},
             {"name": "Score",          "value": score_str,                    "inline": True},
             {"name": "Result",         "value": outcome.capitalize(),          "inline": True},
+            separator,
+            {"name": "Skill Level",    "value": tier_value,                   "inline": False},
         ]
 
     embed = {
-        "title": f"{outcome_emoji(outcome)} {outcome.capitalize()} on {map_name} — {score_str}",
-        "color": color,
-        "fields": fields,
-        "thumbnail": {"url": "https://leetify.com/assets/images/logo/logo-leetify.png"},
-        "footer": {"text": "Data provided by Leetify"},
+        "title":     f"{outcome_emoji(outcome)} {outcome.capitalize()} on {map_name} — {score_str}",
+        "color":     color,
+        "fields":    fields,
+        "thumbnail": {"url": tier_image},
+        "footer":    {"text": "Data provided by Leetify"},
     }
 
     result = requests.post(webhook_url, json={"embeds": [embed]}, timeout=10)
@@ -200,10 +258,10 @@ def send_scoreboard_webhook(match_id, map_name, players):
     ]
 
     embed = {
-        "title": f"🏆 Match Scoreboard: {map_name}",
+        "title":       f"🏆 Match Scoreboard: {map_name}",
         "description": "\n".join(lines),
-        "color": 3447003,
-        "footer": {"text": f"Match ID: {match_id} • Data provided by Leetify"},
+        "color":       3447003,
+        "footer":      {"text": f"Match ID: {match_id} • Data provided by Leetify"},
     }
 
     result = requests.post(SCOREBOARD_WEBHOOK, json={"embeds": [embed]}, timeout=10)
