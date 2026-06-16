@@ -66,7 +66,7 @@ def get_tier(rating):
 
 
 def colored_tier(label, color_code):
-    return f"```ansi\n\u001b[{color_code}m{label}\u001b[0m\n```"
+    return f"```ansi\n\u001b[{color_code}m\u001b[1m{label}\u001b[0m\n```"
 
 
 def load_seen_matches():
