@@ -219,7 +219,7 @@ def send_individual_webhook(webhook_url, player_name, steam_id, match, match_det
             {"name": "Traded Death%",     "value": fmt_pct(traded_dead),                               "inline": True},
             {"name": "Multi-kills",       "value": multi_str,                                          "inline": True},
             separator,
-            {"name": "Skill Level",       "value": tier_value,                                         "inline": False},
+            {"name": "Match Skill Level",       "value": tier_value,                                         "inline": False},
         ]
     else:
         fields = [
@@ -227,7 +227,7 @@ def send_individual_webhook(webhook_url, player_name, steam_id, match, match_det
             {"name": "Score",          "value": score_str,                    "inline": True},
             {"name": "Result",         "value": outcome.capitalize(),          "inline": True},
             separator,
-            {"name": "Skill Level",    "value": tier_value,                   "inline": False},
+            {"name": "Match Skill Level",    "value": tier_value,                   "inline": False},
         ]
 
     embed = {
