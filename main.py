@@ -10,10 +10,10 @@ BASE_URL = "https://api-public.cs-prod.leetify.com"
 PLAYER_INFO = {
     "76561198190033377": {"name": "Tudor",                          "webhook": os.environ.get("TUDOR_WEBHOOK")},
     "76561198435523362": {"name": "Siddoru",                        "webhook": os.environ.get("SIDDORU_WEBHOOK")},
-    "76561199033222316": {"name": "Puya",                           "webhook": os.environ.get("PUYA_WEBHOOK")},
+    "76561199033222316": {"name": "Bendeac Adevaratu",              "webhook": os.environ.get("PUYA_WEBHOOK")},
     "76561198771342370": {"name": "Robi",                           "webhook": os.environ.get("ROBI_WEBHOOK")},
     "76561199236732682": {"name": "Andre1",                         "webhook": os.environ.get("ANDRE1_WEBHOOK")},
-    "76561199226839952": {"name": "Diddyplayscs2_6741",             "webhook": os.environ.get("DIDDY_WEBHOOK")},
+    "76561199226839952": {"name": "Radu",                           "webhook": os.environ.get("DIDDY_WEBHOOK")},
     "76561198983778721": {"name": "Nebunulajokuri777",              "webhook": os.environ.get("NEBUNULAJOKURI_WEBHOOK")},
     "76561198838107739": {"name": "ULTRADARKSHADOWPROMEGAKILLER777","webhook": os.environ.get("ULTRA_WEBHOOK")},
 }
