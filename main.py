@@ -13,7 +13,7 @@ SCOREBOARD_WEBHOOK = os.environ.get("SCOREBOARD_WEBHOOK")
 STATE_FILE = "player_totals.json"
 
 BASE_URL = "https://api-public.cs-prod.leetify.com"
-dsa
+
 RECENT_COUNT         = 10
 MAX_SEEN_PER_PLAYER  = 200
 SCOREBOARD_KEEP_DAYS = 2
