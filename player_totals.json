@@ -28,10 +28,11 @@
         "2b1d19de-1ca3-40ad-9269-b250442a1ec4",
         "12686892-b089-4fb7-b474-9de3e217080e",
         "bd673ccf-ab98-4ee1-9a95-45dbdbfe2c87",
-        "b269a93d-2cc7-4a4c-8f66-473e32aa15b7"
+        "b269a93d-2cc7-4a4c-8f66-473e32aa15b7",
+        "9141a71e-7327-44ca-91be-6fdb69a6f317"
       ],
       "since": "2026-10-26",
-      "total": 2.2
+      "total": -7.6
     },
     "76561198838107739": {
       "seen": [
@@ -137,6 +138,18 @@
           "name": "Nebunulajokuri777",
           "rating": 15.9,
           "total": 15.6
+        }
+      }
+    },
+    "9141a71e-7327-44ca-91be-6fdb69a6f317": {
+      "created": "2026-10-27T18:36:28.985020+00:00",
+      "map": "de_inferno",
+      "message_id": null,
+      "players": {
+        "76561198435523362": {
+          "name": "Siddoru",
+          "rating": -9.8,
+          "total": -7.6
         }
       }
     },
