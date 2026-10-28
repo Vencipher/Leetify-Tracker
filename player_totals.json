@@ -15,10 +15,11 @@
         "9a52a43e-63ef-42e3-bd59-28453fbce980",
         "0466533e-38a8-44c0-8241-181cdd3db6c4",
         "81e8f07c-4bf5-467d-9cd7-f913fc79fc15",
-        "79f67cf9-e8ae-45d5-b98f-bf31d9ffc09d"
+        "79f67cf9-e8ae-45d5-b98f-bf31d9ffc09d",
+        "bf7cad0d-ca03-460e-a954-67ca82b230ab"
       ],
       "since": "2026-10-26",
-      "total": -24.4
+      "total": -18.1
     },
     "76561198435523362": {
       "seen": [
@@ -37,10 +38,11 @@
         "9a52a43e-63ef-42e3-bd59-28453fbce980",
         "0466533e-38a8-44c0-8241-181cdd3db6c4",
         "81e8f07c-4bf5-467d-9cd7-f913fc79fc15",
-        "79f67cf9-e8ae-45d5-b98f-bf31d9ffc09d"
+        "79f67cf9-e8ae-45d5-b98f-bf31d9ffc09d",
+        "bf7cad0d-ca03-460e-a954-67ca82b230ab"
       ],
       "since": "2026-10-26",
-      "total": -8.6
+      "total": -25.9
     },
     "76561198838107739": {
       "seen": [
@@ -265,6 +267,23 @@
           "name": "Siddoru",
           "rating": 2.2,
           "total": 2.2
+        }
+      }
+    },
+    "bf7cad0d-ca03-460e-a954-67ca82b230ab": {
+      "created": "2026-10-28T19:42:26.088340+00:00",
+      "map": "de_inferno",
+      "message_id": "1565088447733964843",
+      "players": {
+        "76561198190033377": {
+          "name": "Tudor",
+          "rating": 6.3,
+          "total": -18.1
+        },
+        "76561198435523362": {
+          "name": "Siddoru",
+          "rating": -17.3,
+          "total": -25.9
         }
       }
     },
