@@ -66,10 +66,11 @@
         "68773718-2aba-41c3-b305-90157f1715d2",
         "2081dacb-9d4f-4693-855a-cfce18499a65",
         "7fe3793e-e1b4-4f52-a1fa-991a580cd84d",
-        "bff497f3-edf8-438c-914a-a24b385ec0c8"
+        "bff497f3-edf8-438c-914a-a24b385ec0c8",
+        "935e8931-a0bc-4ddf-8370-4a7b84663a8e"
       ],
       "since": "2026-10-26",
-      "total": 11.6
+      "total": 19.8
     },
     "76561199033222316": {
       "seen": [
@@ -150,6 +151,18 @@
           "name": "Siddoru",
           "rating": -9.8,
           "total": -7.6
+        }
+      }
+    },
+    "935e8931-a0bc-4ddf-8370-4a7b84663a8e": {
+      "created": "2026-10-28T09:53:26.011907+00:00",
+      "map": "de_nuke",
+      "message_id": null,
+      "players": {
+        "76561198983778721": {
+          "name": "Nebunulajokuri777",
+          "rating": 8.2,
+          "total": 19.8
         }
       }
     },
