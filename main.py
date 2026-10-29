@@ -2,13 +2,13 @@ import json
 import os
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 
 import requests
 
 LEETIFY_API_KEY = os.environ.get("LEETIFY_API_KEY")
 SCOREBOARD_WEBHOOK = os.environ.get("SCOREBOARD_WEBHOOK")
-
 
 STATE_FILE = "player_totals.json"
 
@@ -18,6 +18,10 @@ RECENT_COUNT         = 10
 MAX_SEEN_PER_PLAYER  = 200
 SCOREBOARD_KEEP_DAYS = 2
 SECOND_PASS_DELAY    = 10
+MAX_WORKERS          = 4
+
+MODE_LABELS = {"standard": "Total Points", "wingman": "Wingman Points"}
+MODE_KEYS   = {"standard": "total",        "wingman": "wingman_total"}
 
 PLAYER_INFO = {
     "76561198190033377": {"name": "Tudor",                          "webhook": os.environ.get("TUDOR_WEBHOOK")},
@@ -93,10 +97,12 @@ def load_state():
         with open(STATE_FILE, "r", encoding="utf-8") as f:
             state = json.load(f)
     except (json.JSONDecodeError, OSError) as e:
-
         sys.exit(f"ERROR: could not read {STATE_FILE} ({e}). Stopping so totals aren't overwritten.")
     state.setdefault("players", {})
     state.setdefault("scoreboards", {})
+    for pdata in state["players"].values():
+        pdata.setdefault("total", 0.0)
+        pdata.setdefault("wingman_total", 0.0)
     return state
 
 
@@ -120,6 +126,13 @@ def prune_scoreboards(state):
 
 def to_points(rating):
     return round(float(rating) * 100, 1) + 0.0
+
+
+def rating_points(match):
+    try:
+        return to_points(match.get("leetify_rating"))
+    except (TypeError, ValueError):
+        return None
 
 
 def fmt_points(pts):
@@ -148,34 +161,48 @@ def get_headers():
     return {"_leetify_key": LEETIFY_API_KEY}
 
 
-def fetch_recent_matches(steam_id, count=RECENT_COUNT):
-    url = f"{BASE_URL}/v3/profile"
-    params = {"steam64_id": steam_id}
-    try:
+def player_tag(steam_id):
+    return PLAYER_INFO.get(steam_id, {}).get("name", steam_id)
+
+
+def leetify_get(url, params=None, retries=2):
+    response = None
+    for attempt in range(retries + 1):
         response = requests.get(url, headers=get_headers(), params=params, timeout=15)
-        print(f"  → HTTP {response.status_code}")
+        if response.status_code != 429:
+            return response
+        time.sleep(2 * (attempt + 1))
+    return response
+
+
+def fetch_recent_matches(steam_id, count=RECENT_COUNT):
+    tag = player_tag(steam_id)
+    url = f"{BASE_URL}/v3/profile"
+    try:
+        response = leetify_get(url, params={"steam64_id": steam_id})
+        print(f"  → [{tag}] HTTP {response.status_code}")
         if response.status_code == 200:
             data = response.json()
             if "error" in data:
-                print(f"  → API error: {data['error']}")
+                print(f"  → [{tag}] API error: {data['error']}")
                 return None
             return data.get("recent_matches", [])[:count]
         elif response.status_code == 404:
-            print("  → Player not found. They must sign up at leetify.com first.")
+            print(f"  → [{tag}] Player not found. They must sign up at leetify.com first.")
         elif response.status_code == 401:
-            print("  → Invalid API key.")
+            print(f"  → [{tag}] Invalid API key.")
         else:
-            print(f"  → Unexpected: {response.text[:200]}")
+            print(f"  → [{tag}] Unexpected: {response.text[:200]}")
     except Exception as e:
-        print(f"  → Error ({type(e).__name__}): {e}")
+        print(f"  → [{tag}] Error ({type(e).__name__}): {e}")
     return None
 
 
 def fetch_match_details(game_id):
     url = f"{BASE_URL}/v2/matches/{game_id}"
     try:
-        response = requests.get(url, headers=get_headers(), timeout=15)
-        print(f"  → Match details HTTP {response.status_code}")
+        response = leetify_get(url)
+        print(f"  → Match details {game_id[:8]}... HTTP {response.status_code}")
         if response.status_code == 200:
             return response.json()
         else:
@@ -183,6 +210,22 @@ def fetch_match_details(game_id):
     except Exception as e:
         print(f"  → Error fetching match details ({type(e).__name__}): {e}")
     return None
+
+
+def fetch_profiles(steam_ids):
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+        results = list(pool.map(fetch_recent_matches, steam_ids))
+    return dict(zip(steam_ids, results))
+
+
+def prefetch_details(match_ids, cache):
+    missing = [m for m in match_ids if m not in cache]
+    if not missing:
+        return
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+        for match_id, details in zip(missing, pool.map(fetch_match_details, missing)):
+            if details is not None:
+                cache[match_id] = details
 
 
 def get_player_stats_from_match(match_details, steam_id):
@@ -198,6 +241,21 @@ def oldest_first(matches):
     if matches and all(m.get("finished_at") for m in matches):
         return sorted(matches, key=lambda m: m["finished_at"])
     return list(reversed(matches))
+
+
+def detect_mode(match, details):
+    sources = [str(match.get("data_source") or "").lower()]
+    if details:
+        sources.append(str(details.get("data_source") or "").lower())
+    if any("wingman" in s for s in sources):
+        return "wingman"
+    if details:
+        players = len(details.get("stats") or [])
+        if 0 < players <= 4:
+            return "wingman"
+        if players > 4:
+            return "standard"
+    return None
 
 
 def discord_request(method, url, payload, params=None, retries=2):
@@ -219,7 +277,7 @@ def discord_request(method, url, payload, params=None, retries=2):
     return None
 
 
-def send_individual_webhook(webhook_url, player_name, steam_id, match, match_details, all_time):
+def send_individual_webhook(webhook_url, player_name, steam_id, match, match_details, total, points_label):
     if not webhook_url:
         return
 
@@ -235,7 +293,7 @@ def send_individual_webhook(webhook_url, player_name, steam_id, match, match_det
     ps = get_player_stats_from_match(match_details, steam_id)
 
     separator = {"name": "\u200b", "value": "\u200b", "inline": False}
-    all_time_field = {"name": "All Time Rating", "value": f"**{fmt_points(all_time)}**", "inline": False}
+    points_field = {"name": points_label, "value": f"**{fmt_points(total)}**", "inline": False}
 
     if ps:
         kills       = ps.get("total_kills", 0)
@@ -289,7 +347,7 @@ def send_individual_webhook(webhook_url, player_name, steam_id, match, match_det
             {"name": "Multi-kills",       "value": multi_str,                                          "inline": True},
             separator,
             {"name": "Match Skill Level", "value": tier_value,                                         "inline": False},
-            all_time_field,
+            points_field,
         ]
     else:
         fields = [
@@ -298,7 +356,7 @@ def send_individual_webhook(webhook_url, player_name, steam_id, match, match_det
             {"name": "Result",         "value": outcome.capitalize(),          "inline": True},
             separator,
             {"name": "Match Skill Level", "value": tier_value,               "inline": False},
-            all_time_field,
+            points_field,
         ]
 
     embed = {
@@ -315,9 +373,10 @@ def send_individual_webhook(webhook_url, player_name, steam_id, match, match_det
         print(f"  → Webhook failed for {player_name}: {code} (match is still counted)")
 
 
-def register_scoreboard_entry(state, match_id, map_name, steam_id, name, pts, total):
+def register_scoreboard_entry(state, match_id, map_name, mode, steam_id, name, pts, total):
     sb = state["scoreboards"].setdefault(match_id, {
         "map": map_name,
+        "mode": mode,
         "message_id": None,
         "created": now_utc().isoformat(),
         "players": {},
@@ -326,10 +385,11 @@ def register_scoreboard_entry(state, match_id, map_name, steam_id, name, pts, to
 
 
 def build_scoreboard_embed(match_id, sb):
+    label = MODE_LABELS.get(sb.get("mode", "standard"), MODE_LABELS["standard"])
     players = sorted(sb["players"].values(), key=lambda p: p["rating"], reverse=True)
     lines = [
         f"**{i}. {p['name']}**: {fmt_points(p['rating'])} Rating | "
-        f"All Time Rating: {fmt_points(p['total'])}"
+        f"{label}: {fmt_points(p['total'])}"
         for i, p in enumerate(players, 1)
     ]
     return {
@@ -374,19 +434,28 @@ def sync_scoreboard(state, match_id):
         print(f"  → Scoreboard webhook failed: {code}")
 
 
-def process_player(steam_id, info, state, details_cache, touched):
-    recent = fetch_recent_matches(steam_id)
+def candidate_ids(state, steam_id, recent):
+    pdata = state["players"].get(steam_id)
+    if pdata is None or not recent:
+        return []
+    seen = set(pdata["seen"])
+    return [
+        m["id"] for m in recent
+        if m.get("id") and m["id"] not in seen and rating_points(m) is not None
+    ]
 
+
+def process_player(steam_id, info, recent, state, details_cache, touched):
     if recent is None:
         print("  → Skipping.")
         return 0
 
     pdata = state["players"].get(steam_id)
 
-
     if pdata is None:
         pdata = {
             "total": 0.0,
+            "wingman_total": 0.0,
             "since": now_utc().strftime("%Y-%m-%d"),
             "seen":  [m["id"] for m in oldest_first(recent) if m.get("id")],
         }
@@ -406,32 +475,37 @@ def process_player(steam_id, info, state, details_cache, touched):
         if match_id in seen:
             continue
 
-
-        try:
-            pts = to_points(match.get("leetify_rating"))
-        except (TypeError, ValueError):
+        pts = rating_points(match)
+        if pts is None:
             print(f"  → Match {match_id[:8]}... has no rating yet, will retry next run.")
             continue
 
-        print(f"  → NEW match: {match_id[:8]}... on {match.get('map_name')}")
-        new_total = round(pdata["total"] + pts, 1) + 0.0
+        details = details_cache.get(match_id)
+        mode = detect_mode(match, details)
+        if mode is None:
+            print(f"  → Match {match_id[:8]}... mode unknown (match details unavailable), will retry next run.")
+            continue
 
-        if match_id not in details_cache:
-            print(f"  → Fetching match details for {match_id[:8]}...")
-            details_cache[match_id] = fetch_match_details(match_id)
+        players_in_match = len(details.get("stats") or []) if details else "?"
+        print(
+            f"  → NEW {mode} match: {match_id[:8]}... on {match.get('map_name')} "
+            f"(data_source={match.get('data_source')}, rank_type={match.get('rank_type')}, players={players_in_match})"
+        )
+
+        key = MODE_KEYS[mode]
+        new_total = round(pdata.get(key, 0.0) + pts, 1) + 0.0
 
         send_individual_webhook(
             info["webhook"], info["name"], steam_id,
-            match, details_cache.get(match_id), new_total
+            match, details, new_total, MODE_LABELS[mode]
         )
 
-
-        pdata["total"] = new_total
+        pdata[key] = new_total
         pdata["seen"].append(match_id)
         pdata["seen"] = pdata["seen"][-MAX_SEEN_PER_PLAYER:]
         seen.add(match_id)
         register_scoreboard_entry(
-            state, match_id, match.get("map_name", "Unknown"),
+            state, match_id, match.get("map_name", "Unknown"), mode,
             steam_id, info["name"], pts, new_total
         )
         touched.add(match_id)
@@ -441,36 +515,52 @@ def process_player(steam_id, info, state, details_cache, touched):
     return new_count
 
 
+def run_pass(targets, state, details_cache, touched):
+    profiles = fetch_profiles([steam_id for steam_id, _ in targets])
+
+    wanted = set()
+    for steam_id, _ in targets:
+        wanted.update(candidate_ids(state, steam_id, profiles.get(steam_id)))
+    prefetch_details(wanted, details_cache)
+
+    counts = {}
+    for steam_id, info in targets:
+        print(f"\nChecking {info['name']} ({steam_id})...")
+        counts[steam_id] = process_player(
+            steam_id, info, profiles.get(steam_id), state, details_cache, touched
+        )
+    return counts
+
+
+def flush_scoreboards(state, touched):
+    print()
+    for match_id in touched:
+        sync_scoreboard(state, match_id)
+    save_state(state)
+    touched.clear()
+
+
 def main():
     state = load_state()
     prune_scoreboards(state)
 
     details_cache = {}
     touched       = set()
-    missed        = []
-    total_new     = 0
+    targets       = list(PLAYER_INFO.items())
 
-    for steam_id, info in PLAYER_INFO.items():
-        print(f"\nChecking {info['name']} ({steam_id})...")
-        found = process_player(steam_id, info, state, details_cache, touched)
-        total_new += found
-        if found == 0:
-            missed.append((steam_id, info))
+    counts    = run_pass(targets, state, details_cache, touched)
+    total_new = sum(counts.values())
+    flush_scoreboards(state, touched)
 
-
+    missed = [(steam_id, info) for steam_id, info in targets if counts.get(steam_id, 0) == 0]
     if total_new and missed:
-        print(f"\nSecond pass for players with no new matches (waiting {SECOND_PASS_DELAY}s)...")
+        print(f"Second pass for players with no new matches (waiting {SECOND_PASS_DELAY}s)...")
         time.sleep(SECOND_PASS_DELAY)
-        for steam_id, info in missed:
-            print(f"\nRe-checking {info['name']} ({steam_id})...")
-            process_player(steam_id, info, state, details_cache, touched)
+        second_counts = run_pass(missed, state, details_cache, touched)
+        total_new += sum(second_counts.values())
+        flush_scoreboards(state, touched)
 
-    print()
-    for match_id in touched:
-        sync_scoreboard(state, match_id)
-    save_state(state)
-
-    if not touched:
+    if not total_new:
         print("No new matches found this run.")
 
 
