@@ -45,10 +45,11 @@
         "93fb13c0-ddc1-4c00-b811-134f2b7cbb02",
         "3c547122-f29e-4d0c-a03d-484d9ad942d2",
         "e32bd9ed-d682-45aa-8d88-f35bc2998ab0",
-        "bff497f3-edf8-438c-914a-a24b385ec0c8"
+        "bff497f3-edf8-438c-914a-a24b385ec0c8",
+        "c0408dd2-5472-4f59-9e9c-5ef71e43a09f"
       ],
       "since": "2026-10-29",
-      "total": 0.0,
+      "total": 2.4,
       "wingman_total": 0.0
     },
     "76561198983778721": {
@@ -103,5 +104,19 @@
       "wingman_total": 0.0
     }
   },
-  "scoreboards": {}
+  "scoreboards": {
+    "c0408dd2-5472-4f59-9e9c-5ef71e43a09f": {
+      "created": "2026-10-29T23:26:25.444875+00:00",
+      "map": "de_dust2",
+      "message_id": null,
+      "mode": "standard",
+      "players": {
+        "76561198838107739": {
+          "name": "ULTRADARKSHADOWPROMEGAKILLER777",
+          "rating": 2.4,
+          "total": 2.4
+        }
+      }
+    }
+  }
 }
