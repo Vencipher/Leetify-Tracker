@@ -85,10 +85,11 @@
         "1c9d9fec-9cb6-4669-9563-d867d652ad32",
         "ff807474-c00c-4911-bbd8-00400c420476",
         "f8705f72-6b3d-420d-bc00-826b73c610a4",
-        "f8d8c8e0-547d-4c11-9503-905d4f96a6a5"
+        "f8d8c8e0-547d-4c11-9503-905d4f96a6a5",
+        "640b7d71-0474-4e88-a890-1210145e1cf3"
       ],
       "since": "2026-10-29",
-      "total": 0.0,
+      "total": -5.3,
       "wingman_total": 0.0
     },
     "76561199226839952": {
@@ -133,6 +134,19 @@
           "name": "Nebunulajokuri777",
           "rating": -4.6,
           "total": -4.6
+        }
+      }
+    },
+    "640b7d71-0474-4e88-a890-1210145e1cf3": {
+      "created": "2026-10-30T18:45:37.784810+00:00",
+      "map": "de_cache",
+      "message_id": null,
+      "mode": "standard",
+      "players": {
+        "76561199033222316": {
+          "name": "Bendeac Adevaratu",
+          "rating": -5.3,
+          "total": -5.3
         }
       }
     },
