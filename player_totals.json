@@ -63,10 +63,11 @@
         "5c6b7599-3763-4de4-ba23-80b5d0dc3c1f",
         "935e8931-a0bc-4ddf-8370-4a7b84663a8e",
         "30fe5564-f5cb-497e-8f54-f9d286d3bd37",
-        "e858257a-a4fe-4905-94b5-e61c6eb51553"
+        "e858257a-a4fe-4905-94b5-e61c6eb51553",
+        "3c6a3f66-38fe-48b5-ab43-983d89fb4a19"
       ],
       "since": "2026-10-29",
-      "total": 0.0,
+      "total": 0.2,
       "wingman_total": 0.0
     },
     "76561199033222316": {
@@ -105,6 +106,19 @@
     }
   },
   "scoreboards": {
+    "3c6a3f66-38fe-48b5-ab43-983d89fb4a19": {
+      "created": "2026-10-30T11:06:27.102180+00:00",
+      "map": "de_mirage",
+      "message_id": null,
+      "mode": "standard",
+      "players": {
+        "76561198983778721": {
+          "name": "Nebunulajokuri777",
+          "rating": 0.2,
+          "total": 0.2
+        }
+      }
+    },
     "c0408dd2-5472-4f59-9e9c-5ef71e43a09f": {
       "created": "2026-10-29T23:26:25.444875+00:00",
       "map": "de_dust2",
