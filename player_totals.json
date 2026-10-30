@@ -70,11 +70,12 @@
         "8479b7d4-13ae-4421-a61a-2ee4d08558b5",
         "d890f9e2-4b93-4b6c-816d-a5effd3c6e09",
         "ab013b89-e252-4fc6-af35-dda1627b1456",
-        "722e51db-8609-4fda-bd4a-afdc5fa784ba"
+        "722e51db-8609-4fda-bd4a-afdc5fa784ba",
+        "d739407a-de14-4aac-b725-400e55de7d51"
       ],
       "since": "2026-10-29",
       "total": 0.2,
-      "wingman_total": -35.3
+      "wingman_total": -34.5
     },
     "76561199033222316": {
       "seen": [
@@ -201,6 +202,19 @@
           "name": "ULTRADARKSHADOWPROMEGAKILLER777",
           "rating": 2.4,
           "total": 2.4
+        }
+      }
+    },
+    "d739407a-de14-4aac-b725-400e55de7d51": {
+      "created": "2026-10-30T20:43:25.124186+00:00",
+      "map": "de_inferno",
+      "message_id": null,
+      "mode": "wingman",
+      "players": {
+        "76561198983778721": {
+          "name": "Nebunulajokuri777",
+          "rating": 0.8,
+          "total": -34.5
         }
       }
     },
