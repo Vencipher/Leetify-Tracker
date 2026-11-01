@@ -12,11 +12,12 @@
         "7652765d-0af0-41af-8328-30636cb05820",
         "dd703e3b-62a8-40f7-982a-7271c9f0c59c",
         "bd70012a-0acd-4187-9a4d-bc0deca8771b",
-        "1804be1a-54aa-4c21-934c-bc306aed655e"
+        "1804be1a-54aa-4c21-934c-bc306aed655e",
+        "9dd4df10-fc66-4e61-9594-3113f51a287d"
       ],
       "since": "2026-10-29",
       "total": 0.0,
-      "wingman_total": -10.6
+      "wingman_total": -15.8
     },
     "76561198435523362": {
       "seen": [
@@ -30,11 +31,12 @@
         "7652765d-0af0-41af-8328-30636cb05820",
         "dd703e3b-62a8-40f7-982a-7271c9f0c59c",
         "bd70012a-0acd-4187-9a4d-bc0deca8771b",
-        "1804be1a-54aa-4c21-934c-bc306aed655e"
+        "1804be1a-54aa-4c21-934c-bc306aed655e",
+        "9dd4df10-fc66-4e61-9594-3113f51a287d"
       ],
       "since": "2026-10-29",
       "total": 0.0,
-      "wingman_total": 11.7
+      "wingman_total": 6.4
     },
     "76561198838107739": {
       "seen": [
@@ -284,6 +286,24 @@
           "name": "Nebunulajokuri777",
           "rating": -8.9,
           "total": -16.8
+        }
+      }
+    },
+    "9dd4df10-fc66-4e61-9594-3113f51a287d": {
+      "created": "2026-11-01T18:17:26.127742+00:00",
+      "map": "de_inferno",
+      "message_id": "1566516535059681323",
+      "mode": "wingman",
+      "players": {
+        "76561198190033377": {
+          "name": "Tudor",
+          "rating": -5.2,
+          "total": -15.8
+        },
+        "76561198435523362": {
+          "name": "Siddoru",
+          "rating": -5.3,
+          "total": 6.4
         }
       }
     },
