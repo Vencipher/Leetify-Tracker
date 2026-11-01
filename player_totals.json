@@ -76,11 +76,12 @@
         "0b96edb0-cfde-46bf-a078-af0078d56c52",
         "4611435a-4ff8-447a-81f6-febddb91cff9",
         "5b6a3dd2-8617-4980-a510-2f454565b0c9",
-        "9a74dc5d-897a-4fcf-81ba-b8d95b231e6d"
+        "9a74dc5d-897a-4fcf-81ba-b8d95b231e6d",
+        "96f115cf-7832-408c-afbf-f2f5a0c41560"
       ],
       "since": "2026-10-29",
       "total": 0.2,
-      "wingman_total": -16.8
+      "wingman_total": -13.1
     },
     "76561199033222316": {
       "seen": [
@@ -194,6 +195,19 @@
           "name": "Nebunulajokuri777",
           "rating": -2.1,
           "total": -21.6
+        }
+      }
+    },
+    "96f115cf-7832-408c-afbf-f2f5a0c41560": {
+      "created": "2026-11-01T12:17:25.235074+00:00",
+      "map": "de_inferno",
+      "message_id": null,
+      "mode": "wingman",
+      "players": {
+        "76561198983778721": {
+          "name": "Nebunulajokuri777",
+          "rating": 3.7,
+          "total": -13.1
         }
       }
     },
