@@ -27,11 +27,12 @@
         "5ef49faf-1317-4e17-8d9f-6b32fa974787",
         "e6610f14-3471-48f7-bcfd-2d7e3a2e2bae",
         "e280481d-c15f-4e9b-8a85-de6cc98c7159",
-        "891d8346-5ead-48b6-bcba-832417c35b89"
+        "891d8346-5ead-48b6-bcba-832417c35b89",
+        "c6e22cd2-8a51-45b5-bfe4-0564f7cdf383"
       ],
       "since": "2026-10-29",
       "total": 0.0,
-      "wingman_total": 40.2
+      "wingman_total": 38.3
     },
     "76561198435523362": {
       "seen": [
@@ -139,11 +140,12 @@
         "f8d8c8e0-547d-4c11-9503-905d4f96a6a5",
         "640b7d71-0474-4e88-a890-1210145e1cf3",
         "e280481d-c15f-4e9b-8a85-de6cc98c7159",
-        "891d8346-5ead-48b6-bcba-832417c35b89"
+        "891d8346-5ead-48b6-bcba-832417c35b89",
+        "c6e22cd2-8a51-45b5-bfe4-0564f7cdf383"
       ],
       "since": "2026-10-29",
       "total": -5.3,
-      "wingman_total": 4.9
+      "wingman_total": 28.1
     },
     "76561199226839952": {
       "seen": [
@@ -481,6 +483,24 @@
           "name": "Nebunulajokuri777",
           "rating": 5.5,
           "total": 5.7
+        }
+      }
+    },
+    "c6e22cd2-8a51-45b5-bfe4-0564f7cdf383": {
+      "created": "2026-11-02T19:51:26.151270+00:00",
+      "map": "de_inferno",
+      "message_id": "1566902579483512943",
+      "mode": "wingman",
+      "players": {
+        "76561198190033377": {
+          "name": "Tudor",
+          "rating": -1.9,
+          "total": 38.3
+        },
+        "76561199033222316": {
+          "name": "Bendeac Adevaratu",
+          "rating": 23.2,
+          "total": 28.1
         }
       }
     },
