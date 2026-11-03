@@ -28,11 +28,13 @@
         "e6610f14-3471-48f7-bcfd-2d7e3a2e2bae",
         "e280481d-c15f-4e9b-8a85-de6cc98c7159",
         "891d8346-5ead-48b6-bcba-832417c35b89",
-        "c6e22cd2-8a51-45b5-bfe4-0564f7cdf383"
+        "c6e22cd2-8a51-45b5-bfe4-0564f7cdf383",
+        "10920f43-0f7c-4da4-8524-1c3e825b6e90",
+        "f7d9b4e4-6a97-4753-be59-c733edf80547"
       ],
       "since": "2026-10-29",
       "total": 0.0,
-      "wingman_total": 38.3
+      "wingman_total": 14.5
     },
     "76561198435523362": {
       "seen": [
@@ -61,11 +63,13 @@
         "742413f8-befc-4db4-b402-a1259de0c15f",
         "5ef49faf-1317-4e17-8d9f-6b32fa974787",
         "e6610f14-3471-48f7-bcfd-2d7e3a2e2bae",
-        "3b6ccb37-8219-4211-8f39-cb9d276f596d"
+        "3b6ccb37-8219-4211-8f39-cb9d276f596d",
+        "10920f43-0f7c-4da4-8524-1c3e825b6e90",
+        "f7d9b4e4-6a97-4753-be59-c733edf80547"
       ],
       "since": "2026-10-29",
       "total": 0.0,
-      "wingman_total": 10.9
+      "wingman_total": -11.1
     },
     "76561198838107739": {
       "seen": [
@@ -167,6 +171,24 @@
     }
   },
   "scoreboards": {
+    "10920f43-0f7c-4da4-8524-1c3e825b6e90": {
+      "created": "2026-11-03T20:07:26.578501+00:00",
+      "map": "de_inferno",
+      "message_id": "1567268999576686593",
+      "mode": "wingman",
+      "players": {
+        "76561198190033377": {
+          "name": "Tudor",
+          "rating": -21.8,
+          "total": 16.5
+        },
+        "76561198435523362": {
+          "name": "Siddoru",
+          "rating": -2.6,
+          "total": 8.3
+        }
+      }
+    },
     "11cf2007-737d-4e9b-9c79-de7d92af692c": {
       "created": "2026-11-02T12:30:59.941356+00:00",
       "map": "de_nuke",
@@ -481,6 +503,24 @@
           "name": "Siddoru",
           "rating": 0.1,
           "total": 32.8
+        }
+      }
+    },
+    "f7d9b4e4-6a97-4753-be59-c733edf80547": {
+      "created": "2026-11-03T20:07:26.853528+00:00",
+      "map": "de_inferno",
+      "message_id": "1567268997806825533",
+      "mode": "wingman",
+      "players": {
+        "76561198190033377": {
+          "name": "Tudor",
+          "rating": -2.0,
+          "total": 14.5
+        },
+        "76561198435523362": {
+          "name": "Siddoru",
+          "rating": -19.4,
+          "total": -11.1
         }
       }
     },
