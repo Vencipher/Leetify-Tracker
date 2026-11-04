@@ -250,24 +250,6 @@
         }
       }
     },
-    "891d8346-5ead-48b6-bcba-832417c35b89": {
-      "created": "2026-11-02T19:43:26.005708+00:00",
-      "map": "de_inferno",
-      "message_id": "1566900566112731167",
-      "mode": "wingman",
-      "players": {
-        "76561198190033377": {
-          "name": "Tudor",
-          "rating": 31.9,
-          "total": 40.2
-        },
-        "76561199033222316": {
-          "name": "Bendeac Adevaratu",
-          "rating": 11.5,
-          "total": 4.9
-        }
-      }
-    },
     "a54be450-da64-4ec7-9887-218c500d1761": {
       "created": "2026-11-03T20:32:36.833985+00:00",
       "map": "de_inferno",
