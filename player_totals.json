@@ -604,19 +604,6 @@
           "total": -11.1
         }
       }
-    },
-    "fb053b9a-a9ed-4b6e-9437-5b8bbb85850c": {
-      "created": "2026-11-02T13:01:05.814027+00:00",
-      "map": "de_inferno",
-      "message_id": null,
-      "mode": "wingman",
-      "players": {
-        "76561198983778721": {
-          "name": "Nebunulajokuri777",
-          "rating": -0.8,
-          "total": -6.8
-        }
-      }
     }
   }
 }
