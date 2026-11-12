@@ -325,24 +325,6 @@
         }
       }
     },
-    "5fd97c71-11af-4f74-9bc0-fa2eaa504b95": {
-      "created": "2026-11-10T11:28:30.722566+00:00",
-      "map": "de_nuke",
-      "message_id": "1569675116818727027",
-      "mode": "wingman",
-      "players": {
-        "76561198435523362": {
-          "name": "Siddoru",
-          "rating": 0.9,
-          "total": 34.3
-        },
-        "76561198838107739": {
-          "name": "ULTRADARKSHADOWPROMEGAKILLER777",
-          "rating": 8.4,
-          "total": 1.4
-        }
-      }
-    },
     "6be00142-9dcb-40b2-a2bf-c0fc5355b831": {
       "created": "2026-11-11T19:35:50.072597+00:00",
       "map": "de_inferno",
