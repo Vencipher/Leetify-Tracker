@@ -66,11 +66,12 @@
         "b07f99d3-7a5a-4ac8-a16f-92cf3355b44a",
         "b4164571-405b-4ed0-8789-0a5d92d71b71",
         "2a50e1dd-5424-4da2-965f-eedd3ef0320f",
-        "fad18e97-cffb-4a10-9123-4ab6001d3883"
+        "fad18e97-cffb-4a10-9123-4ab6001d3883",
+        "16590f62-61a7-4ce6-b149-037e0baf842f"
       ],
       "since": "2026-10-29",
       "total": 0.0,
-      "wingman_total": 49.1
+      "wingman_total": 46.2
     },
     "76561198435523362": {
       "seen": [
@@ -138,11 +139,12 @@
         "b07f99d3-7a5a-4ac8-a16f-92cf3355b44a",
         "b4164571-405b-4ed0-8789-0a5d92d71b71",
         "2a50e1dd-5424-4da2-965f-eedd3ef0320f",
-        "fad18e97-cffb-4a10-9123-4ab6001d3883"
+        "fad18e97-cffb-4a10-9123-4ab6001d3883",
+        "16590f62-61a7-4ce6-b149-037e0baf842f"
       ],
       "since": "2026-10-29",
       "total": 0.0,
-      "wingman_total": 47.8
+      "wingman_total": 41.1
     },
     "76561198838107739": {
       "seen": [
@@ -249,6 +251,24 @@
     }
   },
   "scoreboards": {
+    "16590f62-61a7-4ce6-b149-037e0baf842f": {
+      "created": "2026-11-13T20:16:37.613223+00:00",
+      "map": "de_inferno",
+      "message_id": "1570895185343160395",
+      "mode": "wingman",
+      "players": {
+        "76561198190033377": {
+          "name": "Tudor",
+          "rating": -2.9,
+          "total": 46.2
+        },
+        "76561198435523362": {
+          "name": "Siddoru",
+          "rating": -6.7,
+          "total": 41.1
+        }
+      }
+    },
     "2a50e1dd-5424-4da2-965f-eedd3ef0320f": {
       "created": "2026-11-13T19:51:28.371666+00:00",
       "map": "de_inferno",
