@@ -64,11 +64,12 @@
         "5013df57-76b5-4a9b-87ba-92971ea6970f",
         "b385436c-4434-41e5-bfdc-5cc11043c4f3",
         "b07f99d3-7a5a-4ac8-a16f-92cf3355b44a",
-        "b4164571-405b-4ed0-8789-0a5d92d71b71"
+        "b4164571-405b-4ed0-8789-0a5d92d71b71",
+        "2a50e1dd-5424-4da2-965f-eedd3ef0320f"
       ],
       "since": "2026-10-29",
       "total": 0.0,
-      "wingman_total": 51.8
+      "wingman_total": 53.7
     },
     "76561198435523362": {
       "seen": [
@@ -134,11 +135,12 @@
         "5013df57-76b5-4a9b-87ba-92971ea6970f",
         "b385436c-4434-41e5-bfdc-5cc11043c4f3",
         "b07f99d3-7a5a-4ac8-a16f-92cf3355b44a",
-        "b4164571-405b-4ed0-8789-0a5d92d71b71"
+        "b4164571-405b-4ed0-8789-0a5d92d71b71",
+        "2a50e1dd-5424-4da2-965f-eedd3ef0320f"
       ],
       "since": "2026-10-29",
       "total": 0.0,
-      "wingman_total": 49.1
+      "wingman_total": 54.2
     },
     "76561198838107739": {
       "seen": [
@@ -197,10 +199,11 @@
         "fb053b9a-a9ed-4b6e-9437-5b8bbb85850c",
         "622197f5-4c34-4270-a270-d8e87122e8a9",
         "4afdcb59-0e11-4d33-802e-63dccad51e1b",
-        "48a3c123-77ba-4805-add3-3cc45f4a7365"
+        "48a3c123-77ba-4805-add3-3cc45f4a7365",
+        "d0b6fa8e-84fe-4d28-aea4-121dc84febec"
       ],
       "since": "2026-10-29",
-      "total": 5.7,
+      "total": 6.5,
       "wingman_total": -58.5
     },
     "76561199033222316": {
@@ -258,6 +261,24 @@
           "name": "Siddoru",
           "rating": -11.5,
           "total": 43.3
+        }
+      }
+    },
+    "2a50e1dd-5424-4da2-965f-eedd3ef0320f": {
+      "created": "2026-11-13T19:51:28.371666+00:00",
+      "map": "de_inferno",
+      "message_id": "1570888856247730429",
+      "mode": "wingman",
+      "players": {
+        "76561198190033377": {
+          "name": "Tudor",
+          "rating": 1.9,
+          "total": 53.7
+        },
+        "76561198435523362": {
+          "name": "Siddoru",
+          "rating": 5.1,
+          "total": 54.2
         }
       }
     },
@@ -356,6 +377,19 @@
           "name": "Siddoru",
           "rating": -0.8,
           "total": 49.1
+        }
+      }
+    },
+    "d0b6fa8e-84fe-4d28-aea4-121dc84febec": {
+      "created": "2026-11-13T19:51:28.876955+00:00",
+      "map": "de_ancient",
+      "message_id": null,
+      "mode": "standard",
+      "players": {
+        "76561198983778721": {
+          "name": "Nebunulajokuri777",
+          "rating": 0.8,
+          "total": 6.5
         }
       }
     }
