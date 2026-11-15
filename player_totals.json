@@ -342,24 +342,6 @@
         }
       }
     },
-    "2a50e1dd-5424-4da2-965f-eedd3ef0320f": {
-      "created": "2026-11-13T19:51:28.371666+00:00",
-      "map": "de_inferno",
-      "message_id": "1570888856247730429",
-      "mode": "wingman",
-      "players": {
-        "76561198190033377": {
-          "name": "Tudor",
-          "rating": 1.9,
-          "total": 53.7
-        },
-        "76561198435523362": {
-          "name": "Siddoru",
-          "rating": 5.1,
-          "total": 54.2
-        }
-      }
-    },
     "4590afbd-66f2-4a61-afe2-48bb416dce65": {
       "created": "2026-11-13T20:29:33.791162+00:00",
       "map": "de_inferno",
@@ -473,19 +455,6 @@
           "name": "Siddoru",
           "rating": -6.9,
           "total": 35.0
-        }
-      }
-    },
-    "d0b6fa8e-84fe-4d28-aea4-121dc84febec": {
-      "created": "2026-11-13T19:51:28.876955+00:00",
-      "map": "de_ancient",
-      "message_id": null,
-      "mode": "standard",
-      "players": {
-        "76561198983778721": {
-          "name": "Nebunulajokuri777",
-          "rating": 0.8,
-          "total": 6.5
         }
       }
     },
