@@ -344,24 +344,6 @@
         }
       }
     },
-    "a8d66b45-f1b9-4fc1-99cc-927dd7adf3de": {
-      "created": "2026-11-14T18:32:28.387592+00:00",
-      "map": "de_inferno",
-      "message_id": "1571231361719869722",
-      "mode": "wingman",
-      "players": {
-        "76561198190033377": {
-          "name": "Tudor",
-          "rating": -3.9,
-          "total": 55.0
-        },
-        "76561198435523362": {
-          "name": "Siddoru",
-          "rating": -6.9,
-          "total": 35.0
-        }
-      }
-    },
     "d95e1773-0cba-4d63-a85d-59b9a92af89a": {
       "created": "2026-11-15T17:28:35.770771+00:00",
       "map": "de_inferno",
