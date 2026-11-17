@@ -278,24 +278,6 @@
     }
   },
   "scoreboards": {
-    "0c6d9b42-a545-4963-8f57-730d4f419da6": {
-      "created": "2026-11-15T17:27:43.132062+00:00",
-      "map": "de_inferno",
-      "message_id": "1571577457197322476",
-      "mode": "wingman",
-      "players": {
-        "76561198190033377": {
-          "name": "Tudor",
-          "rating": -0.1,
-          "total": 63.8
-        },
-        "76561198435523362": {
-          "name": "Siddoru",
-          "rating": 3.7,
-          "total": 54.9
-        }
-      }
-    },
     "301dc5be-9a8b-43e6-b1d3-3e0d79c4e9d1": {
       "created": "2026-11-16T20:47:46.963170+00:00",
       "map": "de_inferno",
@@ -311,24 +293,6 @@
           "name": "Siddoru",
           "rating": 10.1,
           "total": 52.4
-        }
-      }
-    },
-    "509fa7df-d56f-407d-9c93-5be4745024dc": {
-      "created": "2026-11-15T17:27:43.385638+00:00",
-      "map": "de_inferno",
-      "message_id": "1571577455632846970",
-      "mode": "wingman",
-      "players": {
-        "76561198190033377": {
-          "name": "Tudor",
-          "rating": 14.6,
-          "total": 78.4
-        },
-        "76561198435523362": {
-          "name": "Siddoru",
-          "rating": -12.9,
-          "total": 42.0
         }
       }
     },
