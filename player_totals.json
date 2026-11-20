@@ -251,11 +251,12 @@
         "4afdcb59-0e11-4d33-802e-63dccad51e1b",
         "48a3c123-77ba-4805-add3-3cc45f4a7365",
         "d0b6fa8e-84fe-4d28-aea4-121dc84febec",
-        "9d4413cd-246c-4980-9b92-4cd9af93fde4"
+        "9d4413cd-246c-4980-9b92-4cd9af93fde4",
+        "9d8c8406-cc03-4048-8978-cf28e46bec55"
       ],
       "since": "2026-10-29",
       "total": 6.5,
-      "wingman_total": -70.9
+      "wingman_total": -86.6
     },
     "76561199033222316": {
       "seen": [
@@ -367,6 +368,19 @@
           "name": "Siddoru",
           "rating": 1.8,
           "total": 26.4
+        }
+      }
+    },
+    "9d8c8406-cc03-4048-8978-cf28e46bec55": {
+      "created": "2026-11-20T17:35:44.087845+00:00",
+      "map": "de_cbble",
+      "message_id": null,
+      "mode": "wingman",
+      "players": {
+        "76561198983778721": {
+          "name": "Nebunulajokuri777",
+          "rating": -15.7,
+          "total": -86.6
         }
       }
     },
