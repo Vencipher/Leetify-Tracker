@@ -99,11 +99,12 @@
         "0a93a2bd-c92a-4fb3-bbe8-c0e8df66663c",
         "718813c5-cebb-4c1e-a659-4f28f07cdd33",
         "5b96ac07-93fd-4780-b6b3-f19cec7abdbf",
-        "c9b6c4e8-11bc-4da5-a1c1-f2bd6b5c3dcf"
+        "c9b6c4e8-11bc-4da5-a1c1-f2bd6b5c3dcf",
+        "408da58a-2ba9-4728-b219-215fca2f8510"
       ],
       "since": "2026-10-29",
       "total": 0.0,
-      "wingman_total": 195.5
+      "wingman_total": 211.9
     },
     "76561198435523362": {
       "seen": [
@@ -200,11 +201,12 @@
         "63d8c991-58d8-43b7-ab21-f307d3dcfd96",
         "718813c5-cebb-4c1e-a659-4f28f07cdd33",
         "5b96ac07-93fd-4780-b6b3-f19cec7abdbf",
-        "c9b6c4e8-11bc-4da5-a1c1-f2bd6b5c3dcf"
+        "c9b6c4e8-11bc-4da5-a1c1-f2bd6b5c3dcf",
+        "408da58a-2ba9-4728-b219-215fca2f8510"
       ],
       "since": "2026-10-29",
       "total": 0.0,
-      "wingman_total": 4.1
+      "wingman_total": -3.0
     },
     "76561198838107739": {
       "seen": [
@@ -432,6 +434,24 @@
           "name": "Bendeac Adevaratu",
           "rating": 8.9,
           "total": 23.0
+        }
+      }
+    },
+    "408da58a-2ba9-4728-b219-215fca2f8510": {
+      "created": "2026-11-21T20:04:56.046566+00:00",
+      "map": "de_inferno",
+      "message_id": "1573791348773888031",
+      "mode": "wingman",
+      "players": {
+        "76561198190033377": {
+          "name": "Tudor",
+          "rating": 16.4,
+          "total": 211.9
+        },
+        "76561198435523362": {
+          "name": "Siddoru",
+          "rating": -7.1,
+          "total": -3.0
         }
       }
     },
