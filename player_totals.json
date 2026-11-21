@@ -95,11 +95,12 @@
         "63d8c991-58d8-43b7-ab21-f307d3dcfd96",
         "e255bd22-81f0-444d-a534-bd9daf47812e",
         "ad4414ec-f652-4b5a-ab2f-681d718430ab",
-        "6e673a24-b264-4caf-9130-4163492a4f49"
+        "6e673a24-b264-4caf-9130-4163492a4f49",
+        "0a93a2bd-c92a-4fb3-bbe8-c0e8df66663c"
       ],
       "since": "2026-10-29",
       "total": 0.0,
-      "wingman_total": 186.8
+      "wingman_total": 174.6
     },
     "76561198435523362": {
       "seen": [
@@ -360,6 +361,19 @@
           "name": "Nebunulajokuri777",
           "rating": -6.5,
           "total": -101.4
+        }
+      }
+    },
+    "0a93a2bd-c92a-4fb3-bbe8-c0e8df66663c": {
+      "created": "2026-11-21T14:22:25.207984+00:00",
+      "map": "de_nuke",
+      "message_id": null,
+      "mode": "wingman",
+      "players": {
+        "76561198190033377": {
+          "name": "Tudor",
+          "rating": -12.2,
+          "total": 174.6
         }
       }
     },
