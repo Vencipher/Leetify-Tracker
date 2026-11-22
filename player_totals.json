@@ -426,19 +426,6 @@
         }
       }
     },
-    "2d20f5cb-0176-4292-9c37-5807f7467fb6": {
-      "created": "2026-11-20T18:31:32.099566+00:00",
-      "map": "de_dust2",
-      "message_id": null,
-      "mode": "standard",
-      "players": {
-        "76561199033222316": {
-          "name": "Bendeac Adevaratu",
-          "rating": 8.9,
-          "total": 23.0
-        }
-      }
-    },
     "30f78725-d930-47ea-90a2-cd3f7eef0231": {
       "created": "2026-11-21T21:02:01.270256+00:00",
       "map": "de_dust2",
