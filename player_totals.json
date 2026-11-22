@@ -345,19 +345,6 @@
     }
   },
   "scoreboards": {
-    "04ad874d-8358-4617-96be-257ad82e575d": {
-      "created": "2026-11-20T21:14:44.041799+00:00",
-      "map": "de_cbble",
-      "message_id": null,
-      "mode": "wingman",
-      "players": {
-        "76561198983778721": {
-          "name": "Nebunulajokuri777",
-          "rating": -14.2,
-          "total": -147.1
-        }
-      }
-    },
     "0a93a2bd-c92a-4fb3-bbe8-c0e8df66663c": {
       "created": "2026-11-21T14:22:25.207984+00:00",
       "map": "de_nuke",
