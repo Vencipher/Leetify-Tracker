@@ -17,8 +17,8 @@ BASE_URL = "https://api-public.cs-prod.leetify.com"
 RECENT_COUNT         = 10
 MAX_SEEN_PER_PLAYER  = 200
 SCOREBOARD_KEEP_DAYS = 2
-SECOND_PASS_DELAY    = 10
-MAX_WORKERS          = 4
+DETAILS_WAIT_MINUTES = 10
+MAX_WORKERS          = 3
 
 MODE_LABELS = {"standard": "Total Points", "wingman": "Wingman Points"}
 MODE_KEYS   = {"standard": "total",        "wingman": "wingman_total"}
@@ -124,6 +124,19 @@ def prune_scoreboards(state):
             del state["scoreboards"][match_id]
 
 
+def prune_pending(state):
+    cutoff = now_utc() - timedelta(days=1)
+    for pdata in state["players"].values():
+        pending = pdata.get("pending", {})
+        for match_id in list(pending):
+            try:
+                first_seen = datetime.fromisoformat(pending[match_id])
+            except ValueError:
+                first_seen = cutoff - timedelta(seconds=1)
+            if first_seen < cutoff:
+                del pending[match_id]
+
+
 def to_points(rating):
     return round(float(rating) * 100, 1) + 0.0
 
@@ -171,7 +184,12 @@ def leetify_get(url, params=None, retries=2):
         response = requests.get(url, headers=get_headers(), params=params, timeout=15)
         if response.status_code != 429:
             return response
-        time.sleep(2 * (attempt + 1))
+        try:
+            wait = float(response.headers.get("Retry-After", 2 * (attempt + 1)))
+        except ValueError:
+            wait = 2.0 * (attempt + 1)
+        print(f"  → Leetify rate limit hit, waiting {min(wait, 5):.0f}s")
+        time.sleep(min(wait, 5))
     return response
 
 
@@ -482,9 +500,15 @@ def process_player(steam_id, info, recent, state, details_cache, touched):
 
         details = details_cache.get(match_id)
         mode = detect_mode(match, details)
-        if mode is None:
-            print(f"  → Match {match_id[:8]}... mode unknown (match details unavailable), will retry next run.")
-            continue
+        pending = pdata.setdefault("pending", {})
+        if details is None or mode is None:
+            first_seen = datetime.fromisoformat(pending.setdefault(match_id, now_utc().isoformat()))
+            if now_utc() - first_seen < timedelta(minutes=DETAILS_WAIT_MINUTES):
+                print(f"  → Match {match_id[:8]}... details not ready yet, will retry next run.")
+                continue
+            print(f"  → Match {match_id[:8]}... details still unavailable, posting with limited info.")
+            mode = mode or "standard"
+        pending.pop(match_id, None)
 
         players_in_match = len(details.get("stats") or []) if details else "?"
         print(
@@ -543,6 +567,7 @@ def flush_scoreboards(state, touched):
 def main():
     state = load_state()
     prune_scoreboards(state)
+    prune_pending(state)
 
     details_cache = {}
     touched       = set()
@@ -551,14 +576,6 @@ def main():
     counts    = run_pass(targets, state, details_cache, touched)
     total_new = sum(counts.values())
     flush_scoreboards(state, touched)
-
-    missed = [(steam_id, info) for steam_id, info in targets if counts.get(steam_id, 0) == 0]
-    if total_new and missed:
-        print(f"Second pass for players with no new matches (waiting {SECOND_PASS_DELAY}s)...")
-        time.sleep(SECOND_PASS_DELAY)
-        second_counts = run_pass(missed, state, details_cache, touched)
-        total_new += sum(second_counts.values())
-        flush_scoreboards(state, touched)
 
     if not total_new:
         print("No new matches found this run.")
