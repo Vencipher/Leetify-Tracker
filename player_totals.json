@@ -561,19 +561,6 @@
           "total": 4.1
         }
       }
-    },
-    "df8ed9b3-cb75-464a-a993-b46cb1217d9e": {
-      "created": "2026-11-21T12:52:29.722403+00:00",
-      "map": "de_cbble",
-      "message_id": null,
-      "mode": "wingman",
-      "players": {
-        "76561198983778721": {
-          "name": "Nebunulajokuri777",
-          "rating": -0.8,
-          "total": -146.4
-        }
-      }
     }
   }
 }
