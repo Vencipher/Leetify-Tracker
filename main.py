@@ -1,5 +1,6 @@
 import json
 import os
+import subprocess
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -111,6 +112,41 @@ def save_state(state):
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(state, f, indent=2, sort_keys=True)
     os.replace(tmp, STATE_FILE)
+
+
+def run_git(*args):
+    return subprocess.run(["git", *args], capture_output=True, text=True)
+
+
+def commit_state(message, retry=False):
+    if os.environ.get("COMMIT_STATE") != "1":
+        return True
+    run_git("config", "user.name", "github-actions[bot]")
+    run_git("config", "user.email", "github-actions[bot]@users.noreply.github.com")
+    run_git("add", STATE_FILE)
+    if run_git("diff", "--staged", "--quiet").returncode == 0:
+        return True
+    commit = run_git("commit", "-m", message)
+    if commit.returncode != 0:
+        print(f"  → git commit failed: {commit.stderr.strip()[:200]}")
+        run_git("reset", "--hard", "HEAD")
+        return False
+    branch = run_git("rev-parse", "--abbrev-ref", "HEAD").stdout.strip()
+    attempts = 4 if retry else 1
+    for attempt in range(attempts):
+        push = run_git("push")
+        if push.returncode == 0:
+            return True
+        print(f"  → git push rejected: {push.stderr.strip()[-200:]}")
+        if not retry:
+            break
+        pull = run_git("pull", "--rebase", "origin", branch)
+        if pull.returncode != 0:
+            run_git("rebase", "--abort")
+            break
+        time.sleep(1 + attempt)
+    run_git("reset", "--hard", "HEAD~1")
+    return False
 
 
 def prune_scoreboards(state):
@@ -295,10 +331,7 @@ def discord_request(method, url, payload, params=None, retries=2):
     return None
 
 
-def send_individual_webhook(webhook_url, player_name, steam_id, match, match_details, total, points_label):
-    if not webhook_url:
-        return
-
+def build_individual_embed(steam_id, match, match_details, total, points_label):
     map_name  = match.get("map_name", "Unknown")
     rating    = match.get("leetify_rating")
     outcome   = match.get("outcome", "unknown")
@@ -385,6 +418,12 @@ def send_individual_webhook(webhook_url, player_name, steam_id, match, match_det
         "footer":    {"text": "Data provided by Leetify"},
     }
 
+    return embed
+
+
+def post_individual(webhook_url, player_name, embed):
+    if not webhook_url:
+        return
     result = discord_request("POST", webhook_url, {"embeds": [embed]})
     if result is None or result.status_code not in (200, 204):
         code = "no response" if result is None else f"HTTP {result.status_code}"
@@ -463,7 +502,7 @@ def candidate_ids(state, steam_id, recent):
     ]
 
 
-def process_player(steam_id, info, recent, state, details_cache, touched):
+def process_player(steam_id, info, recent, state, details_cache, touched, posts):
     if recent is None:
         print("  → Skipping.")
         return 0
@@ -478,7 +517,6 @@ def process_player(steam_id, info, recent, state, details_cache, touched):
             "seen":  [m["id"] for m in oldest_first(recent) if m.get("id")],
         }
         state["players"][steam_id] = pdata
-        save_state(state)
         print(f"  → Started tracking {info['name']}: {len(pdata['seen'])} existing matches ignored.")
         return 0
 
@@ -519,10 +557,8 @@ def process_player(steam_id, info, recent, state, details_cache, touched):
         key = MODE_KEYS[mode]
         new_total = round(pdata.get(key, 0.0) + pts, 1) + 0.0
 
-        send_individual_webhook(
-            info["webhook"], info["name"], steam_id,
-            match, details, new_total, MODE_LABELS[mode]
-        )
+        embed = build_individual_embed(steam_id, match, details, new_total, MODE_LABELS[mode])
+        posts.append((info["webhook"], info["name"], embed))
 
         pdata[key] = new_total
         pdata["seen"].append(match_id)
@@ -533,13 +569,12 @@ def process_player(steam_id, info, recent, state, details_cache, touched):
             steam_id, info["name"], pts, new_total
         )
         touched.add(match_id)
-        save_state(state)
         new_count += 1
 
     return new_count
 
 
-def run_pass(targets, state, details_cache, touched):
+def run_pass(targets, state, details_cache, touched, posts):
     profiles = fetch_profiles([steam_id for steam_id, _ in targets])
 
     wanted = set()
@@ -551,17 +586,9 @@ def run_pass(targets, state, details_cache, touched):
     for steam_id, info in targets:
         print(f"\nChecking {info['name']} ({steam_id})...")
         counts[steam_id] = process_player(
-            steam_id, info, profiles.get(steam_id), state, details_cache, touched
+            steam_id, info, profiles.get(steam_id), state, details_cache, touched, posts
         )
     return counts
-
-
-def flush_scoreboards(state, touched):
-    print()
-    for match_id in touched:
-        sync_scoreboard(state, match_id)
-    save_state(state)
-    touched.clear()
 
 
 def main():
@@ -571,14 +598,29 @@ def main():
 
     details_cache = {}
     touched       = set()
+    posts         = []
     targets       = list(PLAYER_INFO.items())
 
-    counts    = run_pass(targets, state, details_cache, touched)
+    counts    = run_pass(targets, state, details_cache, touched, posts)
     total_new = sum(counts.values())
-    flush_scoreboards(state, touched)
+
+    save_state(state)
+    if not commit_state("Update player totals"):
+        print("\nAnother run updated the state first. Skipping this run so nothing is posted twice.")
+        return
 
     if not total_new:
-        print("No new matches found this run.")
+        print("\nNo new matches found this run.")
+        return
+
+    print()
+    for webhook_url, name, embed in posts:
+        post_individual(webhook_url, name, embed)
+    for match_id in touched:
+        sync_scoreboard(state, match_id)
+
+    save_state(state)
+    commit_state("Update scoreboard messages", retry=True)
 
 
 if __name__ == "__main__":
