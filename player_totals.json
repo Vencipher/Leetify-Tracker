@@ -115,10 +115,11 @@
         "a0aed8e9-663f-4373-833e-cd42fd8bf775",
         "46e20560-113a-42f4-b9b4-0b7c65c72d2f",
         "ab799722-7489-42e8-8d42-7873088005db",
-        "531257f7-abae-4ee9-974f-1ad53222681d"
+        "531257f7-abae-4ee9-974f-1ad53222681d",
+        "eddc1ce0-e974-4ee0-872b-0897db9bf351"
       ],
       "since": "2026-10-29",
-      "total": 0.0,
+      "total": 3.2,
       "wingman_total": 195.2
     },
     "76561198435523362": {
@@ -474,6 +475,19 @@
           "name": "Siddoru",
           "rating": 11.8,
           "total": -13.4
+        }
+      }
+    },
+    "eddc1ce0-e974-4ee0-872b-0897db9bf351": {
+      "created": "2026-11-26T20:21:28.522793+00:00",
+      "map": "de_dust2",
+      "message_id": null,
+      "mode": "standard",
+      "players": {
+        "76561198190033377": {
+          "name": "Tudor",
+          "rating": 3.2,
+          "total": 3.2
         }
       }
     },
