@@ -264,6 +264,7 @@
       "wingman_total": 1.4
     },
     "76561198983778721": {
+      "pending": {},
       "seen": [
         "994f9b4a-d219-4786-af8c-b7c6143e856c",
         "1b98b566-229f-4e2b-9357-603daa38750f",
@@ -324,11 +325,12 @@
         "6c5790d4-0bf0-4a15-8a1d-62cc464f47e3",
         "30f78725-d930-47ea-90a2-cd3f7eef0231",
         "4a38339a-74bd-415d-8381-f279d4725c77",
-        "3b338d39-fac8-4ce0-a193-1cbc6e4835d1"
+        "3b338d39-fac8-4ce0-a193-1cbc6e4835d1",
+        "08b5d373-3cbb-4a75-9366-36de3fcb3c7a"
       ],
       "since": "2026-10-29",
       "total": 24.7,
-      "wingman_total": -136.1
+      "wingman_total": -143.2
     },
     "76561199033222316": {
       "seen": [
@@ -372,6 +374,19 @@
     }
   },
   "scoreboards": {
+    "08b5d373-3cbb-4a75-9366-36de3fcb3c7a": {
+      "created": "2026-11-27T17:39:40.321476+00:00",
+      "map": "de_cbble",
+      "message_id": null,
+      "mode": "wingman",
+      "players": {
+        "76561198983778721": {
+          "name": "Nebunulajokuri777",
+          "rating": -7.1,
+          "total": -143.2
+        }
+      }
+    },
     "39d22028-9243-4d7c-ad38-3b6f3436f196": {
       "created": "2026-11-25T20:19:42.184058+00:00",
       "map": "de_inferno",
