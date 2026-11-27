@@ -119,10 +119,11 @@
         "eddc1ce0-e974-4ee0-872b-0897db9bf351",
         "d3d8fc5d-75e7-4932-b78d-5045b9a1c77c",
         "f9ca2eac-e91c-4c4e-b8b1-2f005b352abf",
-        "f89b9698-26dc-42b3-9b24-680fedb212d8"
+        "f89b9698-26dc-42b3-9b24-680fedb212d8",
+        "42c90080-745d-4242-b5ad-cc0df37e785c"
       ],
       "since": "2026-10-29",
-      "total": 18.4,
+      "total": 19.5,
       "wingman_total": 195.2
     },
     "76561198435523362": {
@@ -329,10 +330,11 @@
         "3b338d39-fac8-4ce0-a193-1cbc6e4835d1",
         "08b5d373-3cbb-4a75-9366-36de3fcb3c7a",
         "e9dcc9fd-818c-477f-9ce8-2364f241b488",
-        "ceb5897e-db5a-470a-a141-87826f391504"
+        "ceb5897e-db5a-470a-a141-87826f391504",
+        "42c90080-745d-4242-b5ad-cc0df37e785c"
       ],
       "since": "2026-10-29",
-      "total": 23.7,
+      "total": 16.9,
       "wingman_total": -143.2
     },
     "76561199033222316": {
@@ -405,6 +407,24 @@
           "name": "Siddoru",
           "rating": -21.3,
           "total": -23.3
+        }
+      }
+    },
+    "42c90080-745d-4242-b5ad-cc0df37e785c": {
+      "created": "2026-11-27T20:06:56.006111+00:00",
+      "map": "de_ancient",
+      "message_id": null,
+      "mode": "standard",
+      "players": {
+        "76561198190033377": {
+          "name": "Tudor",
+          "rating": 1.1,
+          "total": 19.5
+        },
+        "76561198983778721": {
+          "name": "Nebunulajokuri777",
+          "rating": -6.8,
+          "total": 16.9
         }
       }
     },
