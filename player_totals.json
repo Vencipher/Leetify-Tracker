@@ -326,10 +326,11 @@
         "30f78725-d930-47ea-90a2-cd3f7eef0231",
         "4a38339a-74bd-415d-8381-f279d4725c77",
         "3b338d39-fac8-4ce0-a193-1cbc6e4835d1",
-        "08b5d373-3cbb-4a75-9366-36de3fcb3c7a"
+        "08b5d373-3cbb-4a75-9366-36de3fcb3c7a",
+        "e9dcc9fd-818c-477f-9ce8-2364f241b488"
       ],
       "since": "2026-10-29",
-      "total": 24.7,
+      "total": 23.8,
       "wingman_total": -143.2
     },
     "76561199033222316": {
@@ -487,6 +488,19 @@
           "name": "Tudor",
           "rating": 5.9,
           "total": 9.1
+        }
+      }
+    },
+    "e9dcc9fd-818c-477f-9ce8-2364f241b488": {
+      "created": "2026-11-27T18:17:25.401666+00:00",
+      "map": "de_dust2",
+      "message_id": null,
+      "mode": "standard",
+      "players": {
+        "76561198983778721": {
+          "name": "Nebunulajokuri777",
+          "rating": -0.9,
+          "total": 23.8
         }
       }
     },
