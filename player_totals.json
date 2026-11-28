@@ -342,11 +342,12 @@
         "ceb5897e-db5a-470a-a141-87826f391504",
         "42c90080-745d-4242-b5ad-cc0df37e785c",
         "3ec333c8-cfa8-4f15-8d5d-280a7cf9776c",
-        "20943e9a-0bf7-44fb-8f69-c6871deef9dc"
+        "20943e9a-0bf7-44fb-8f69-c6871deef9dc",
+        "de565e79-076e-4708-bd21-045942b5d3c3"
       ],
       "since": "2026-10-29",
       "total": 16.9,
-      "wingman_total": -162.7
+      "wingman_total": -168.0
     },
     "76561199033222316": {
       "seen": [
@@ -566,6 +567,19 @@
           "name": "Tudor",
           "rating": 5.9,
           "total": 9.1
+        }
+      }
+    },
+    "de565e79-076e-4708-bd21-045942b5d3c3": {
+      "created": "2026-11-28T14:32:26.035963+00:00",
+      "map": "de_cbble",
+      "message_id": null,
+      "mode": "wingman",
+      "players": {
+        "76561198983778721": {
+          "name": "Nebunulajokuri777",
+          "rating": -5.3,
+          "total": -168.0
         }
       }
     },
