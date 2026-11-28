@@ -131,10 +131,11 @@
         "7a7d33d8-8b50-4ea9-aa54-80cf2d6eb67f",
         "600f05d4-9dfc-4cd9-a033-4a0dda6b78fc",
         "dcd0beb7-6767-44bf-be29-1439abe08997",
-        "c517d861-992a-4b30-88e7-5961af4da3d9"
+        "c517d861-992a-4b30-88e7-5961af4da3d9",
+        "ac50ae2c-548f-480c-b84b-3e6d4706aa8a"
       ],
       "since": "2026-10-29",
-      "total": 26.3,
+      "total": 24.4,
       "wingman_total": 195.2
     },
     "76561198435523362": {
@@ -545,6 +546,19 @@
           "name": "Tudor",
           "rating": -4.2,
           "total": 8.2
+        }
+      }
+    },
+    "ac50ae2c-548f-480c-b84b-3e6d4706aa8a": {
+      "created": "2026-11-28T19:32:34.121322+00:00",
+      "map": "de_dust2",
+      "message_id": null,
+      "mode": "standard",
+      "players": {
+        "76561198190033377": {
+          "name": "Tudor",
+          "rating": -1.9,
+          "total": 24.4
         }
       }
     },
